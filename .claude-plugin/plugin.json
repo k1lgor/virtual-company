@@ -1,0 +1,28 @@
+{
+  "name": "virtual-company",
+  "version": "1.0.0",
+  "description": "A collection of 27 specialized agent skills for professional coding, architecture, and orchestration.",
+  "author": {
+    "name": "Plamen Ivanov",
+    "url": "https://github.com/k1lgor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/k1lgor/virtual-company"
+  },
+  "homepage": "https://github.com/k1lgor/virtual-company#readme",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "agent-skills",
+    "workflows",
+    "coding-assistant",
+    "ai-agents",
+    "development",
+    "architecture",
+    "testing",
+    "devops"
+  ],
+  "skills_dir": "./skills",
+  "commands_dir": "./commands"
+}
