@@ -186,3 +186,7 @@ Supports modular skills for specialized repository tasks.
 | 24  | `workflow-orchestrator`    | Complex task scheduling and orchestration.         |
 | 25  | `legacy-archaeologist`     | Understanding and refactoring legacy code.         |
 | 26  | `skill-generator`          | Creating and debugging new SKILL.md files.         |
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=k1lgor/virtual-company&type=date&legend=top-left)](https://www.star-history.com/#k1lgor/virtual-company&type=date&legend=top-left)
