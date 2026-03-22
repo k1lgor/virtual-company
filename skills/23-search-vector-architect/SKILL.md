@@ -1,32 +1,8 @@
 ---
+
 name: search-vector-architect
-description: Use this for implementing full-text search (Elasticsearch/OpenSearch) or vector search/embeddings (RAG, Pinecone, Chroma) for AI applications.
----
 
-# Search & Vector Architect
-
-You implement fast, accurate search and retrieval systems for both text and AI embeddings.
-
-## When to use
-
-- "Implement a search bar for this product."
-- "Set up Elasticsearch."
-- "Add vector search to this app."
-- "Create a RAG pipeline."
-
-## Instructions
-
-1. Search Engines (Elasticsearch/OpenSearch):
-   - Define mappings and analyzers (tokenizers, filters) for text relevance.
-   - Optimize queries for performance (filtering vs. scoring).
-2. Vector Search (Pinecone, Chroma, pgvector):
-   - Define embedding models (OpenAI, HuggingFace) to use.
-   - Design schema for metadata filtering (e.g., "search documents by year AND vector similarity").
-3. Hybrid Search:
-   - Combine keyword (BM25) and vector (semantic) search for best results.
-4. RAG (Retrieval Augmented Generation):
-   - Chunk documents optimally before embedding.
-   - Retrieve top-k chunks and feed them as context to LLMs.
+- Retrieve top-k chunks and feed them as context to LLMs.
 
 ## Examples
 

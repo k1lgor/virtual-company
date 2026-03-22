@@ -1,2 +1,3 @@
+# Internal skill source of truth (dev use only — end users install from skills/ mirror)
 .agent/
-
+docs/

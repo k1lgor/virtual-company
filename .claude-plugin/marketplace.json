@@ -5,16 +5,16 @@
     "url": "https://github.com/k1lgor"
   },
   "metadata": {
-    "description": "A collection of 27 specialized agent skills for professional coding, architecture, and orchestration.",
-    "version": "1.0.0",
-    "updated": "2026-02-04"
+    "description": "Professional 3-Tier AI Engine for Claude Code: 27 Experts, 6 Strategic Agents, and Automated Lifecycle Hooks.",
+    "version": "1.1.0",
+    "updated": "2026-03-22"
   },
   "plugins": [
     {
       "name": "virtual-company",
       "source": "./",
-      "description": "27 expert-grade coding and orchestration skills for Claude Code.",
-      "version": "1.0.0",
+      "description": "Transforms Claude Code into a professional engineering team with 27 Domain Experts, 6 Strategic Agents, and Native Lifecycle Hooks.",
+      "version": "1.1.0",
       "author": {
         "name": "Plamen Ivanov",
         "url": "https://github.com/k1lgor"
@@ -28,19 +28,22 @@
         "testing",
         "devops",
         "data-engineering",
-        "machine-learning"
+        "machine-learning",
+        "automation"
       ],
       "keywords": [
         "skills",
         "workflows",
-        "agent",
-        "claude",
-        "code",
+        "agents",
+        "hooks",
+        "claude-code",
         "plugin",
         "marketplace",
         "virtual-company",
         "coding-assistant",
-        "ai-agents"
+        "ai-agents",
+        "security",
+        "automation"
       ]
     }
   ]
