@@ -1,7 +1,7 @@
 {
   "name": "virtual-company",
-  "version": "1.1.0",
-  "description": "A collection of 27 specialized agent skills for professional coding, architecture, and orchestration.",
+  "version": "1.2.0",
+  "description": "27 specialized agent skills with Hard Gates, Iron Laws, Decision Trees, Failure Modes, 8 verification scripts, and 6 strategic agents for professional engineering orchestration.",
   "author": {
     "name": "Plamen Ivanov",
     "url": "https://github.com/k1lgor"
@@ -26,5 +26,6 @@
   "skills_dir": "./skills",
   "agents_dir": "./agents",
   "hooks_dir": "./hooks",
-  "commands_dir": "./commands"
+  "commands_dir": "./commands",
+  "scripts_dir": "./scripts"
 }

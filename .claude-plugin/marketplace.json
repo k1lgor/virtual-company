@@ -5,16 +5,16 @@
     "url": "https://github.com/k1lgor"
   },
   "metadata": {
-    "description": "Professional 3-Tier AI Engine for Claude Code: 27 Experts, 6 Strategic Agents, and Automated Lifecycle Hooks.",
-    "version": "1.1.0",
-    "updated": "2026-03-22"
+    "description": "Professional 3-Tier AI Engine for Claude Code: 27 Experts with Quality Gates, 6 Strategic Agents, 8 Verification Scripts, and Automated Lifecycle Hooks.",
+    "version": "1.2.0",
+    "updated": "2026-03-28"
   },
   "plugins": [
     {
       "name": "virtual-company",
       "source": "./",
-      "description": "Transforms Claude Code into a professional engineering team with 27 Domain Experts, 6 Strategic Agents, and Native Lifecycle Hooks.",
-      "version": "1.1.0",
+      "description": "27 Domain Experts with Hard Gates & Iron Laws, 6 Strategic Agents, 8 Verification Scripts, and Native Lifecycle Hooks.",
+      "version": "1.2.0",
       "author": {
         "name": "Plamen Ivanov",
         "url": "https://github.com/k1lgor"
