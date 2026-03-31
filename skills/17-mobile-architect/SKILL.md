@@ -3,12 +3,7 @@ name: mobile-architect
 description: Use when building iOS/Android/Flutter/React Native apps, implementing offline sync, optimizing mobile performance, or handling platform-specific APIs — with platform testing discipline
 persona: Senior Mobile Architect and Cross-Platform Specialist.
 capabilities:
-  [
-    native_performance_tuning,
-    offline_sync_strategies,
-    mobile_resource_optimization,
-    platform_specific_api_design,
-  ]
+  [native_performance_tuning, offline_sync_strategies, mobile_resource_optimization, platform_specific_api_design]
 allowed-tools: [Read, Edit, Bash, Agent]
 ---
 
@@ -207,6 +202,15 @@ ListView.builder(
 6. Platform guidelines: Material Design (Android) or HIG (iOS) followed
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No mobile feature ships without offline handling + cross-platform testing."
 
 ## Examples

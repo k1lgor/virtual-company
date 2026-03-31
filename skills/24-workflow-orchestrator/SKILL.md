@@ -3,12 +3,7 @@ name: workflow-orchestrator
 description: Use when designing multi-step workflows, state machines, parallel execution plans, or coordinating multiple agents/skills for a complex task
 persona: Senior Systems Architect and Process Automation Specialist.
 capabilities:
-  [
-    state_machine_design,
-    workflow_optimization,
-    parallel_execution_planning,
-    error_boundary_logic,
-  ]
+  [state_machine_design, workflow_optimization, parallel_execution_planning, error_boundary_logic]
 allowed-tools: [Read, Edit, Glob, Grep, Agent]
 ---
 
@@ -190,7 +185,6 @@ When orchestrating multiple AI agents:
 ## Dispatch Template
 
 ### Agent [N]: [Role]
-
 **Task:** [Specific, bounded task]
 **Context:** [Only relevant files/data]
 **Constraints:** [What NOT to do]
@@ -248,6 +242,15 @@ When orchestrating multiple AI agents:
 6. Test the state machine with at least: happy path, one failure, one retry
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No workflow is complete without failure mode coverage."
 
 ## Examples

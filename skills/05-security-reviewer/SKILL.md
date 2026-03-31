@@ -3,12 +3,7 @@ name: security-reviewer
 description: Use when performing security audits, reviewing code for vulnerabilities, checking auth flows, or validating OWASP compliance — before any approval or merge
 persona: Senior Security Engineer and Penetration Testing Specialist.
 capabilities:
-  [
-    injection_prevention,
-    auth_authorization_audit,
-    secure_defaults_validation,
-    sensitive_data_exposure_prevention,
-  ]
+  [injection_prevention, auth_authorization_audit, secure_defaults_validation, sensitive_data_exposure_prevention]
 allowed-tools: [Grep, Read, Glob, Bash, Agent]
 ---
 
@@ -39,11 +34,14 @@ Before approving ANY code change:
 - **Deep Audit**: Use `Read` to audit authentication middleware and sensitive data paths.
 - **Verification**: Use `Bash` to check for security scans (e.g., `npm audit`, `trivy`, `semgrep`).
 - **Secret Scanning**: Use `security-sentinel.sh` to scan for leaked credentials:
+
   ```bash
   <project_root>/scripts/security-sentinel.sh --text src/ config/
   <project_root>/scripts/security-sentinel.sh --json --severity HIGH .
   ```
+
 - **Dependency Audit**: Use `audit-deps.sh` to check for CVEs:
+
   ```bash
   <project_root>/scripts/audit-deps.sh --fix
   <project_root>/scripts/audit-deps.sh --severity high

@@ -3,12 +3,7 @@ name: legacy-archaeologist
 description: Use when analyzing unknown or legacy codebases, documenting undocumented systems, planning refactoring, or identifying dead code and technical debt — with systematic exploration
 persona: Senior Software Historian and Codebase Analyst.
 capabilities:
-  [
-    codebase_mapping,
-    technical_debt_analysis,
-    refactoring_planning,
-    dead_code_identification,
-  ]
+  [codebase_mapping, technical_debt_analysis, refactoring_planning, dead_code_identification]
 allowed-tools: [Grep, Glob, Read, Bash, Agent]
 ---
 
@@ -231,7 +226,16 @@ def test_legacy_email_validation():
 7. Refactoring plan: incremental (Strangler Fig), not big-bang
 ```
 
-"No refactoring begins without understanding + characterization tests."
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
+  "No refactoring begins without understanding + characterization tests."
 
 ## Examples
 

@@ -226,6 +226,15 @@ def evaluate_rag(query, expected_answer, retriever, llm):
 7. Reproducible: random seeds set, pipeline documented
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No model ships without holdout evaluation."
 
 ## Examples

@@ -3,12 +3,7 @@ name: ux-designer
 description: Use when designing user flows, creating accessible UI components, optimizing visual hierarchy, or defining design systems — with usability and accessibility verification
 persona: Senior UI/UX Designer and User Experience Architect.
 capabilities:
-  [
-    user_flow_design,
-    accessibility_auditing,
-    design_system_architecture,
-    visual_hierarchy_optimization,
-  ]
+  [user_flow_design, accessibility_auditing, design_system_architecture, visual_hierarchy_optimization]
 allowed-tools: [Read, Edit, Bash, Agent]
 ---
 
@@ -107,16 +102,16 @@ Direct user attention using:
 ```css
 /* ✅ GOOD: Accessible color contrast */
 .btn-primary {
-  background: #1d4ed8; /* Blue-700 */
-  color: #ffffff; /* White: 8.59:1 contrast ratio */
-  padding: 12px 24px; /* Touch target: 48px height */
-  min-height: 44px; /* Minimum touch target */
+  background: #1d4ed8;  /* Blue-700 */
+  color: #ffffff;        /* White: 8.59:1 contrast ratio */
+  padding: 12px 24px;    /* Touch target: 48px height */
+  min-height: 44px;      /* Minimum touch target */
 }
 
 /* ❌ BAD: Insufficient contrast */
 .btn-bad {
-  background: #93c5fd; /* Blue-300 */
-  color: #ffffff; /* White: 2.43:1 — FAILS WCAG AA */
+  background: #93c5fd;  /* Blue-300 */
+  color: #ffffff;        /* White: 2.43:1 — FAILS WCAG AA */
 }
 ```
 

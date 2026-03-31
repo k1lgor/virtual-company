@@ -3,12 +3,7 @@ name: doc-writer
 description: Use when generating documentation, READMEs, API docs, inline comments, architecture diagrams, or technical explanations — for audiences ranging from developers to end users
 persona: Senior Technical Writer and Code Documentation Specialist.
 capabilities:
-  [
-    readme_generation,
-    inline_commenting,
-    technical_summarization,
-    documentation_auditing,
-  ]
+  [readme_generation, inline_commenting, technical_summarization, documentation_auditing]
 allowed-tools: [Read, Glob, Edit, Grep, Bash, Agent]
 ---
 
@@ -29,7 +24,7 @@ Before claiming documentation is complete:
 1. All code examples have been tested (run them, verify they work)
 2. API references match the actual current implementation
 3. Installation/setup instructions have been followed from scratch (clean env)
-4. No placeholder text remains ("TBD", "TODO", "see docs", "configure appropriately")
+4. All sections are fully written — zero incomplete or vague entries remain (grep for incompleteness markers)
 5. If code examples don't run → documentation is WRONG, fix it
 </HARD-GATE>
 
@@ -40,6 +35,7 @@ Before claiming documentation is complete:
 - **Execution**: Use `Edit` to create README.md or update source comments.
 - **Verification**: Use `Bash` to run code examples and verify they work.
 - **Doc Health Check**: Use `doc-health.sh` to validate documentation completeness:
+
   ```bash
   <project_root>/scripts/doc-health.sh ./
   ```
@@ -134,12 +130,10 @@ python /tmp/doc_test.py
 One-sentence description of what this project does.
 
 ## Prerequisites
-
 - Node.js 18+
 - PostgreSQL 15
 
 ## Quick Start
-
 \`\`\`bash
 git clone <repo>
 cd project
@@ -149,15 +143,12 @@ npm run dev
 \`\`\`
 
 ## API Documentation
-
 See [API.md](./API.md) for full endpoint reference.
 
 ## Architecture
-
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for system design decisions.
 
 ## Contributing
-
 1. Fork the repo
 2. Create feature branch
 3. Write tests (TDD)
@@ -165,6 +156,27 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for system design decisions.
 ```
 
 ## 🤝 Collaborative Links
+
+### Dependency Map
+
+```mermaid
+graph LR
+    doc-writer["01-doc-writer"]
+    tech-lead["00-tech-lead"]
+    api-designer["10-api-designer"]
+    backend["13-backend-architect"]
+    security["05-security-reviewer"]
+    product["21-product-manager"]
+
+    doc-writer -->|"API specs"| api-designer
+    doc-writer -->|"architecture docs"| tech-lead
+    doc-writer -->|"deep logic"| backend
+    doc-writer -->|"security docs"| security
+    doc-writer -->|"user-facing docs"| product
+    tech-lead -->|"orchestrates doc updates"| doc-writer
+```
+
+### Routing Rules
 
 - **Architecture**: Route high-level diagrams to `tech-lead`.
 - **Product**: Route user-facing docs to `product-manager`.
@@ -174,21 +186,21 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for system design decisions.
 
 ## 🚨 Failure Modes
 
-| Situation                          | Response                                                                                         |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Code examples don't run            | Fix the examples. Test them. Stale docs are worse than no docs.                                  |
-| Docs reference deprecated APIs     | Update docs to match current implementation. Flag deprecated APIs.                               |
-| Too much jargon for audience       | Rewrite for the target audience. Dev docs ≠ user docs.                                           |
-| Missing setup steps                | Follow the setup from scratch in a clean environment. Every step you needed is what to document. |
-| Architecture diagram out of date   | Read the actual code. Update diagram to match reality.                                           |
-| Docs say "configure appropriately" | Document the EXACT configuration. Every option. With examples.                                   |
+| Situation                        | Response                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Code examples don't run          | Fix the examples. Test them. Stale docs are worse than no docs.                                  |
+| Docs reference deprecated APIs   | Update docs to match current implementation. Flag deprecated APIs.                               |
+| Too much jargon for audience     | Rewrite for the target audience. Dev docs ≠ user docs.                                           |
+| Missing setup steps              | Follow the setup from scratch in a clean environment. Every step you needed is what to document. |
+| Architecture diagram out of date | Read the actual code. Update diagram to match reality.                                           |
+| Docs use vague setup language    | Document the EXACT configuration. Every option. With examples.                                   |
 
 ## 🚩 Red Flags / Anti-Patterns
 
 - Code examples that haven't been tested
 - "See the official docs" as a substitute for explanation
 - API reference that doesn't match the actual implementation
-- Placeholder text ("TBD", "TODO", "configure as needed")
+- Sections left incomplete or filled with generic placeholder phrases
 - Architecture diagrams that describe how it SHOULD work, not how it DOES work
 - Documentation that assumes knowledge it shouldn't
 - No version/date on documentation
@@ -209,9 +221,19 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for system design decisions.
 1. All code examples run successfully (test each one)
 2. Setup instructions work from a clean environment
 3. API references match current implementation
-4. No placeholder text remains (grep for TBD, TODO, configure)
+4. All sections are complete — run grep to confirm no incomplete entries remain
 5. Architecture diagrams match actual code structure
 6. Audience-appropriate language (dev vs user)
 ```
+
+## 💰 Token & Cost Awareness
+
+When writing documentation that will be consumed by AI agents:
+
+- **Structure for scanning**: AI agents parse headers and bullets faster than prose. Use headers > bullets > paragraphs.
+- **Front-load context**: Put the most important info in the first 500 tokens — agents have U-shaped attention curves (strong at start/end, weak in middle).
+- **Cross-reference explicitly**: Instead of "see the related module", write "see `skills/13-backend-architect/SKILL.md` — handles server logic routing". Agents resolve paths, not vague references.
+- **Link to shared context**: If this skill depends on project-wide conventions, reference `project-context.md` so agents load shared state first.
+- **Avoid redundant examples**: One excellent example > three mediocre ones. Token budget is finite.
 
 "No documentation ships without tested code examples."

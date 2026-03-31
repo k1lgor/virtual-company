@@ -3,12 +3,7 @@ name: migration-upgrader
 description: Use when performing version upgrades, framework migrations, library replacements, or API deprecation handling — with rollback planning and risk assessment
 persona: Senior Software Migration Engineer and Lifecycle Specialist.
 capabilities:
-  [
-    breaking_change_analysis,
-    dependency_auditing,
-    incremental_refactoring,
-    update_scripts,
-  ]
+  [breaking_change_analysis, dependency_auditing, incremental_refactoring, update_scripts]
 allowed-tools: [Grep, Glob, Bash, Edit, Agent]
 ---
 
@@ -144,9 +139,7 @@ Document BEFORE starting:
 
 ```markdown
 ## Rollback Plan
-
 If migration fails at any step:
-
 1. `git stash` or `git checkout` to last known-good commit
 2. `npm install` to restore old dependencies
 3. Verify: `npm test` passes
@@ -204,6 +197,15 @@ If migration fails at any step:
 7. Rollback plan documented (even though migration is done)
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No migration completes without full regression testing."
 
 ## Examples

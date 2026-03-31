@@ -73,6 +73,7 @@ graph TD
 ### Phase 1: Hierarchy Definition
 
 Organize resources logically:
+
 ```
 namespace: my-app
   ├── deployment: api-server
@@ -86,6 +87,7 @@ namespace: my-app
 ### Phase 2: Resource Hardening
 
 Every container gets resource constraints and probes:
+
 ```yaml
 containers:
   - name: api
@@ -169,14 +171,14 @@ spec:
 
 ## 🚨 Failure Modes
 
-| Situation | Response |
-|-----------|----------|
-| Pod in CrashLoopBackOff | Check logs (`kubectl logs`), check liveness probe, check resource limits. |
-| Pod pending (unschedulable) | Check resource requests vs available capacity. Check node selectors/taints. |
-| Service not routing traffic | Verify selector labels match pod labels. Check readiness probe. |
-| Ingress not working | Check ingress controller is installed. Check TLS cert status. Check DNS. |
-| ConfigMap changes not reflected | ConfigMaps are immutable snapshots. Restart pods after changes. |
-| OOMKilled | Increase memory limits or fix memory leak. Check if limits are too tight. |
+| Situation                       | Response                                                                    |
+| ------------------------------- | --------------------------------------------------------------------------- |
+| Pod in CrashLoopBackOff         | Check logs (`kubectl logs`), check liveness probe, check resource limits.   |
+| Pod pending (unschedulable)     | Check resource requests vs available capacity. Check node selectors/taints. |
+| Service not routing traffic     | Verify selector labels match pod labels. Check readiness probe.             |
+| Ingress not working             | Check ingress controller is installed. Check TLS cert status. Check DNS.    |
+| ConfigMap changes not reflected | ConfigMaps are immutable snapshots. Restart pods after changes.             |
+| OOMKilled                       | Increase memory limits or fix memory leak. Check if limits are too tight.   |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -191,12 +193,12 @@ spec:
 
 ## Common Rationalizations
 
-| Excuse | Reality |
-|--------|---------|
-| "It's a dev cluster, no limits needed" | Dev habits become prod habits. Set limits always. |
-| "Health check is redundant" | Without it, K8s can't detect dead pods. Essential. |
-| "We'll add RBAC later" | Later never comes. Add namespace isolation at minimum. |
-| "Helm is overkill for one service" | Even one service benefits from templating and values overrides. |
+| Excuse                                 | Reality                                                         |
+| -------------------------------------- | --------------------------------------------------------------- |
+| "It's a dev cluster, no limits needed" | Dev habits become prod habits. Set limits always.               |
+| "Health check is redundant"            | Without it, K8s can't detect dead pods. Essential.              |
+| "We'll add RBAC later"                 | Later never comes. Add namespace isolation at minimum.          |
+| "Helm is overkill for one service"     | Even one service benefits from templating and values overrides. |
 
 ## ✅ Verification Before Completion
 
@@ -210,6 +212,15 @@ spec:
 7. Labels and selectors are consistent
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No manifest applies without dry-run validation."
 
 ## Examples

@@ -286,14 +286,20 @@ public void testOrderCalculatesTax() {
     Receipt receipt = order.process();
     assertEquals(107.25, receipt.total(), 0.01); // Includes CA tax
 }
-```
 
 OrderCalculatesTax() {
-Order order = new Order(100.0, "CA");
-Receipt receipt = order.process();
-assertEquals(107.25, receipt.total(), 0.01); // Includes CA tax
+    Order order = new Order(100.0, "CA");
+    Receipt receipt = order.process();
+    assertEquals(107.25, receipt.total(), 0.01); // Includes CA tax
 }
-
 ```
 
-```
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.

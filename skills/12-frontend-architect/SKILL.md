@@ -3,12 +3,7 @@ name: frontend-architect
 description: Use when building UI components, implementing responsive layouts, managing client-side state, or fixing accessibility issues — before shipping to production
 persona: Senior Frontend Architect and UI/UX Engineer.
 capabilities:
-  [
-    responsive_design,
-    state_management_architecture,
-    component_optimization,
-    A11y_compliance,
-  ]
+  [responsive_design, state_management_architecture, component_optimization, A11y_compliance]
 allowed-tools: [Read, Edit, Glob, Grep, Bash, Agent]
 ---
 
@@ -93,12 +88,12 @@ test("Button calls onClick when clicked", async () => {
 });
 ```
 
-3. **Run test** → confirm it fails (component doesn't exist yet).
+1. **Run test** → confirm it fails (component doesn't exist yet).
 
 ### Phase 2: Implementation (TDD GREEN)
 
-4. **Use semantic HTML**: `<nav>`, `<main>`, `<button>`, `<article>`, not div-soup.
-5. **Implement with accessibility built-in**:
+1. **Use semantic HTML**: `<nav>`, `<main>`, `<button>`, `<article>`, not div-soup.
+2. **Implement with accessibility built-in**:
 
 ```jsx
 export const Button = ({
@@ -118,12 +113,12 @@ export const Button = ({
 );
 ```
 
-6. **Run test** → confirm it passes.
+3. **Run test** → confirm it passes.
 
 ### Phase 3: Responsive Verification
 
-7. **Use relative units** (rem, %, vw/vh) — never px for layout.
-8. **Verify at breakpoints**:
+1. **Use relative units** (rem, %, vw/vh) — never px for layout.
+2. **Verify at breakpoints**:
 
 ```css
 .container {
@@ -140,9 +135,9 @@ export const Button = ({
 
 ### Phase 4: Performance Check
 
-9. **Memoize expensive computations**: `useMemo`, `useCallback`.
-10. **Avoid unnecessary re-renders**: `React.memo` on pure components.
-11. **Lazy load** routes and heavy components.
+1. **Memoize expensive computations**: `useMemo`, `useCallback`.
+2. **Avoid unnecessary re-renders**: `React.memo` on pure components.
+3. **Lazy load** routes and heavy components.
 
 ## 🤝 Collaborative Links
 

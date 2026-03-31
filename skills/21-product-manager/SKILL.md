@@ -83,13 +83,11 @@ Identify the core problem:
 As a [user type], I want to [action], so that [benefit].
 
 **Acceptance Criteria:**
-
 - Given [context], When [action], Then [expected result]
 - Given [context], When [action], Then [expected result]
 - Given [error context], When [action], Then [error handling]
 
 **Definition of Done:**
-
 - [ ] AC verified by test-genius
 - [ ] Code reviewed and approved
 - [ ] Security reviewed (if applicable)
@@ -122,32 +120,26 @@ As a [user type], I want to [action], so that [benefit].
 # Feature: [Name]
 
 ## Problem Statement
-
 [What user pain point does this solve?]
 
 ## Target Users
-
 [Who benefits and how?]
 
 ## Goals & Success Metrics
-
 - Metric 1: [measurable goal]
 - Metric 2: [measurable goal]
 
 ## Functional Requirements
-
 - MUST: [core functionality]
 - SHOULD: [important additions]
 - COULD: [nice to have]
 
 ## Non-Functional Requirements
-
 - Performance: [specific targets]
 - Security: [specific requirements]
 - Accessibility: [WCAG compliance level]
 
 ## Out of Scope
-
 - [Explicitly excluded features]
 ```
 

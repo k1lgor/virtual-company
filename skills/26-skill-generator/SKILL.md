@@ -3,12 +3,7 @@ name: skill-generator
 description: Use when creating new skills, debugging existing SKILL.md files, or evolving skill definitions — before deploying any skill to production
 persona: Senior Skill Architect and Meta-Agent Designer.
 capabilities:
-  [
-    prompt_engineering_optimization,
-    SKILL_standardization,
-    Persona_design,
-    SOP_drafting,
-  ]
+  [prompt_engineering_optimization, SKILL_standardization, Persona_design, SOP_drafting]
 allowed-tools: [Read, Edit, Glob, Bash, Agent]
 ---
 
@@ -39,6 +34,7 @@ Before deploying ANY skill:
 - **Deep Audit**: Use `Read` to audit existing SKILL.md files for consistency.
 - **Execution**: Use `Edit` to create a new folder and SKILL.md for the new domain expert.
 - **Quality Gate**: Use `validate-skill.sh` to enforce skill quality standards:
+
   ```bash
   <project_root>/scripts/validate-skill.sh ./skills/new-skill/SKILL.md
   ```
@@ -184,7 +180,7 @@ Define Collaborative Links to at least 3 existing skills:
 
 ### Content Quality
 
-- [ ] No placeholders: no "TBD", "TODO", "implement later", "add appropriate error handling"
+- [ ] No incomplete entries: all sections are fully written with concrete content (no gaps or vague placeholders)
 - [ ] No narrative storytelling ("In session X, we found...")
 - [ ] Every instruction is actionable, not theoretical
 - [ ] Rationalization table addresses real failure modes
@@ -221,7 +217,7 @@ Define Collaborative Links to at least 3 existing skills:
 
 - Creating a skill without testing it first
 - Writing narrative examples instead of reusable patterns
-- Adding "TBD" or "TODO" anywhere in the skill
+- Leaving any section incomplete or filled with generic placeholder phrases
 - Writing description that summarizes the workflow (agent skips reading skill body)
 - Creating a skill for one-off solutions (use CLAUDE.md instead)
 - Not defining Collaborative Links (skill becomes isolated)
@@ -243,13 +239,22 @@ Define Collaborative Links to at least 3 existing skills:
 ```
 1. YAML frontmatter valid: `name` (kebab-case), `description` (starts with "Use when", no workflow summary)
 2. All required sections present (Iron Law, Hard Gate, Decision Tree, Failure Modes, Red Flags, Verification)
-3. No placeholders anywhere in the file (grep for TBD, TODO, implement later)
+3. All sections fully written (run grep to confirm no incomplete entries remain)
 4. At least 3 Collaborative Links to other skills
 5. At least 1 concrete code example
 6. Pressure scenario tested and agent complies
 ```
 
-"No skill deploys without testing."
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
+  "No skill deploys without testing."
 
 ## Examples
 

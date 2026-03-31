@@ -3,12 +3,7 @@ name: backend-architect
 description: Use when implementing server-side logic, designing middleware, integrating databases, or building API endpoints — with TDD and verification discipline
 persona: Senior Backend Engineer and Distributed Systems Architect.
 capabilities:
-  [
-    server_logic,
-    middleware_design,
-    database_integration,
-    performance_optimization,
-  ]
+  [server_logic, middleware_design, database_integration, performance_optimization]
 allowed-tools: [Glob, Read, Grep, Edit, Bash, Agent]
 ---
 
@@ -219,6 +214,15 @@ app.use((err, req, res, next) => {
 7. No console.error output during normal operation
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No endpoint ships without test + validation + error handling."
 
 ## Examples

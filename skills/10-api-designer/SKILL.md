@@ -202,21 +202,30 @@ test("POST /users response matches schema", async () => {
 6. Contract tests written and passing
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No implementation begins without a validated contract."
 
 ## Examples
 
-### REST: Todo API Contract
+### REST: Task API Contract
 
 ```yaml
 openapi: "3.1.0"
 info:
-  title: Todo API
+  title: Task API
   version: "1.0.0"
 paths:
-  /api/v1/todos:
+  /api/v1/tasks:
     get:
-      summary: List todos
+      summary: List tasks
       parameters:
         - name: completed
           in: query
@@ -230,18 +239,18 @@ paths:
             application/json:
               schema:
                 type: array
-                items: { $ref: "#/components/schemas/Todo" }
+                items: { $ref: "#/components/schemas/Task" }
     post:
-      summary: Create todo
+      summary: Create task
       requestBody:
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/CreateTodo" }
+            schema: { $ref: "#/components/schemas/CreateTask" }
       responses:
         "201":
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/Todo" }
+              schema: { $ref: "#/components/schemas/Task" }
         "400":
           content:
             application/json:
@@ -249,7 +258,7 @@ paths:
 
 components:
   schemas:
-    Todo:
+    Task:
       type: object
       properties:
         id: { type: string, format: uuid }
@@ -257,7 +266,7 @@ components:
         completed: { type: boolean }
         createdAt: { type: string, format: date-time }
       required: [id, title, completed, createdAt]
-    CreateTodo:
+    CreateTask:
       type: object
       properties:
         title: { type: string, minLength: 1, maxLength: 200 }

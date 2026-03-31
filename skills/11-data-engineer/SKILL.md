@@ -186,7 +186,7 @@ def load(df: pd.DataFrame, db_connection):
 
 ## 🚩 Red Flags / Anti-Patterns
 
-- SELECT \* in production queries (breaks when schema changes)
+- SELECT * in production queries (breaks when schema changes)
 - No indexes on foreign keys and filter columns
 - Migrations without rollback path
 - Storing secrets/PII in plain text columns
@@ -215,4 +215,48 @@ def load(df: pd.DataFrame, db_connection):
 6. Performance: tested on realistic data volume (not 10 rows)
 ```
 
+## 💡 Examples
+
+### Migration with Rollback
+
+```sql
+-- UP
+CREATE TABLE orders_v2 (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    total_cents BIGINT NOT NULL CHECK (total_cents >= 0),
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_orders_user ON orders_v2(user_id);
+CREATE INDEX idx_orders_status ON orders_v2(status) WHERE status = 'pending';
+
+-- DOWN
+DROP TABLE IF EXISTS orders_v2;
+```
+
+### Pipeline with Validation Gates
+
+```python
+def etl_pipeline(source, target):
+    raw = extract(source)
+    assert raw.shape[0] > 0, "Empty source"          # input gate
+
+    clean = transform(raw, dedup=True, null_fill="unknown")
+    assert clean.duplicated().sum() == 0, "Duplicates remain"  # transform gate
+
+    load(target, clean)
+    loaded = count_rows(target)
+    assert loaded == clean.shape[0], f"Row mismatch: {loaded} != {clean.shape[0]}"  # output gate
+```
+
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No pipeline ships without validation at every stage."

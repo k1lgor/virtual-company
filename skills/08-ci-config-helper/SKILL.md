@@ -3,12 +3,7 @@ name: ci-config-helper
 description: Use when creating CI/CD pipelines (GitHub Actions, GitLab CI, CircleCI), debugging pipeline failures, optimizing build times, or configuring deployment automation
 persona: Senior DevOps Engineer and CI/CD Automation Specialist.
 capabilities:
-  [
-    pipeline_design,
-    secret_management_audit,
-    job_parallelization,
-    caching_optimization,
-  ]
+  [pipeline_design, secret_management_audit, job_parallelization, caching_optimization]
 allowed-tools: [Read, Edit, Bash, Grep, Agent]
 ---
 
@@ -213,6 +208,54 @@ deploy:
 4. Branch protection blocks merge on failure
 5. Parallelization where possible (lint || test || build)
 6. Action versions pinned (not @latest)
+```
+
+## 💡 Examples
+
+### GitHub Actions with Cache + Parallel Jobs
+
+```yaml
+name: CI
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npm test
+
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npm run build
+```
+
+### Secret Safety Check (pre-commit)
+
+```bash
+# .githooks/pre-commit
+if git diff --cached | grep -qE '(password|secret|api_key|token)'; then
+  echo "❌ Potential secret in staged files. Aborting."
+  exit 1
+fi
 ```
 
 "No pipeline config merges without secret safety + cache verification."

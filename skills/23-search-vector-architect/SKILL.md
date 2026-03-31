@@ -3,12 +3,7 @@ name: search-vector-architect
 description: Use when designing full-text search (Elasticsearch), vector search (Pinecone, Weaviate), RAG pipelines, or hybrid search systems — with evaluation metrics
 persona: Senior Search and AI Retrieval Architect.
 capabilities:
-  [
-    elasticsearch_design,
-    vector_search_optimization,
-    RAG_architecture,
-    hybrid_search,
-  ]
+  [elasticsearch_design, vector_search_optimization, RAG_architecture, hybrid_search]
 allowed-tools: [Read, Edit, Bash, Grep, Agent]
 ---
 
@@ -252,4 +247,53 @@ print(f"Sources: {[d.page_content[:50] for d in result['source_documents']]}")
 7. Monitoring: search quality tracked over time
 ```
 
+## 💡 Examples
+
+### Hybrid Search with Reranking
+
+```python
+from sentence_transformers import CrossEncoder
+
+def hybrid_search(query, top_k=10):
+    # 1. Keyword search (BM25)
+    bm25_results = bm25_index.search(query, top_k * 3)
+
+    # 2. Semantic search (vector)
+    query_embedding = embed_model.encode(query)
+    vector_results = vector_index.search(query_embedding, top_k * 3)
+
+    # 3. Merge + deduplicate
+    candidates = deduplicate(bm25_results + vector_results)
+
+    # 4. Rerank with cross-encoder
+    reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-12-v2")
+    pairs = [(query, doc.text) for doc in candidates]
+    scores = reranker.predict(pairs)
+
+    # 5. Return top-k
+    ranked = sorted(zip(candidates, scores), key=lambda x: x[1], reverse=True)
+    return [doc for doc, score in ranked[:top_k]]
+```
+
+### Evaluation Dataset Template
+
+```json
+{
+  "queries": [
+    {"query": "How to set up authentication?", "expected_doc_ids": ["auth-setup.md", "jwt-guide.md"], "min_relevant": 2},
+    {"query": "Deploy to production", "expected_doc_ids": ["deployment.md"], "min_relevant": 1},
+    {"query": "Database connection pooling", "expected_doc_ids": ["db-pool.md", "performance.md"], "min_relevant": 1}
+  ]
+}
+```
+
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No search system deploys without relevance metrics."

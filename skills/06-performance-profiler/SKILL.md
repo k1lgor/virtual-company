@@ -3,12 +3,7 @@ name: performance-profiler
 description: Use when diagnosing slow code, identifying bottlenecks, optimizing hot paths, fixing memory leaks, or improving concurrency — always with before/after benchmarks
 persona: Senior Performance Engineer and Optimization Specialist.
 capabilities:
-  [
-    bottleneck_identification,
-    concurrency_optimization,
-    GC_tuning,
-    algorithmic_optimization,
-  ]
+  [bottleneck_identification, concurrency_optimization, GC_tuning, algorithmic_optimization]
 allowed-tools: [Grep, Read, Bash, Glob, Agent]
 ---
 
@@ -214,6 +209,15 @@ autocannon -c 100 -d 10 http://localhost:3000/api/endpoint
 7. Before/after numbers documented for future reference
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No optimization is complete without before/after benchmarks."
 
 ## Examples

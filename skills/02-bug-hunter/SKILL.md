@@ -41,6 +41,7 @@ Before claiming the bug is fixed:
 - **Diagnostics**: Use `Read` to analyze the surrounding context of the error.
 - **Verification**: Use `Bash` or terminal to verify the fix with test runners.
 - **Gate Verification**: Use `verify-gate.sh` to mechanically verify any gate:
+
   ```bash
   <project_root>/scripts/verify-gate.sh \
     --gate-name "regression-test" \
@@ -206,6 +207,15 @@ Before claiming the bug is fixed:
 5. Reproduce original bug scenario → it no longer occurs
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No completion claims without fresh verification evidence."
 
 ## Examples

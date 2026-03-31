@@ -3,12 +3,7 @@ name: code-polisher
 description: Use when refactoring messy code, improving readability, eliminating code smells, or applying SOLID/DRRY principles — always with tests as safety net
 persona: Senior Software Engineer and Clean Code Specialist.
 capabilities:
-  [
-    DRY_refactoring,
-    SOLID_principles_audit,
-    performance_tuning,
-    readability_improvement,
-  ]
+  [DRY_refactoring, SOLID_principles_audit, performance_tuning, readability_improvement]
 allowed-tools: [Read, Edit, Grep, Glob, Bash, Agent]
 ---
 
@@ -199,6 +194,15 @@ npm run format    # Code formatted
 7. Full test suite passes at the end
 ```
 
+## 💰 Token & Cost Awareness
+
+When working with AI agents consuming this skill:
+
+- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
+- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
+- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
+- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No refactoring without test verification before AND after."
 
 **Self-validation (when polishing skills):**
@@ -249,14 +253,9 @@ if elapsed > 86400:
 SECONDS_PER_DAY = 86400
 if elapsed > SECONDS_PER_DAY:
     archive()
-```
 
 # ✅ AFTER: Named constant
-
 SECONDS_PER_DAY = 86400
 if elapsed > SECONDS_PER_DAY:
-archive()
-
-```
-
+    archive()
 ```
