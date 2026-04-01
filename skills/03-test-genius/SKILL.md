@@ -188,6 +188,8 @@ go test -cover ./...             # Go
 | Test passes immediately without implementation | You're testing existing behavior. Change test to test NEW behavior.    |
 | Can't reproduce a bug in a test                | You don't understand the bug yet. Go back to investigation.            |
 | Existing code has no tests                     | Start with tests for the code you're touching. Add tests as you go.    |
+| Flaky tests in CI (pass/fail randomly)         | Fix the root cause: race conditions, shared state, timing. Never just retry. |
+| Snapshot tests too broad                       | Snapshots should be small and focused. Giant snapshots get blindly accepted. |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -294,12 +296,9 @@ OrderCalculatesTax() {
 }
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
+"No completion claims without fresh verification evidence."

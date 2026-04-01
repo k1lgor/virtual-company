@@ -210,6 +210,8 @@ When orchestrating multiple AI agents:
 | Dead letter queue fills up             | Alert human. Batch-reprocess or manual intervention.                                               |
 | Workflow completes but output is wrong | Audit each state transition. Check guard conditions. Likely a logic error in transition rules.     |
 | Transient failure keeps retrying       | Check retry policy. May need circuit breaker pattern instead of retry.                             |
+| Workflow timeout exceeded          | Kill stuck agents. Log state. Restart from last checkpoint.                 |
+| Agent produces empty output       | Treat as failure. Re-dispatch with more context. Max 2 retries.              |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -242,16 +244,12 @@ When orchestrating multiple AI agents:
 6. Test the state machine with at least: happy path, one failure, one retry
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No workflow is complete without failure mode coverage."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

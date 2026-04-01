@@ -171,6 +171,9 @@ output "vpc_id" {
 | Secrets in .tf files                  | Move to secret manager. Rotate the compromised secret. Add to .gitignore. |
 | Drift detected (manual changes)       | Import or revert manual changes. Enforce IaC-only changes going forward.  |
 | Cost spike after infra change         | Add cost alerts. Use reserved instances for predictable workloads.        |
+| Terraform state lock stuck            | Force unlock with `terraform force-unlock <ID>`. Check if someone is mid-apply. |
+| Cross-account resource access         | Use assume-role with external ID. Never share credentials across accounts. |
+| Disaster recovery needed              | Multi-region failover, automated snapshots, tested restore procedures.    |
 
 ## 🚩 Red Flags / Anti-Patterns
 

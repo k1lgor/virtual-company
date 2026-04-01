@@ -88,7 +88,7 @@ test("Button calls onClick when clicked", async () => {
 });
 ```
 
-1. **Run test** → confirm it fails (component doesn't exist yet).
+3. **Run test** → confirm it fails (component doesn't exist yet).
 
 ### Phase 2: Implementation (TDD GREEN)
 
@@ -156,7 +156,10 @@ export const Button = ({
 | Accessibility audit fails              | Don't ship. Fix semantic HTML and ARIA attributes first.          |
 | Responsive layout breaks at edge cases | Test at 320px, 375px, 768px, 1024px, 1440px minimum.              |
 | Tests require too many mocks           | Component is too coupled. Simplify props, extract logic to hooks. |
-| CSS specificity wars                   | Use CSS modules or Tailwind. Never use `!important`.              |
+| CSS specificity wars                   | Use CSS modules or Tailwind. Never use `!important`.                          |
+| Third-party component breaks a11y      | Wrap with aria overrides. File upstream issue. Consider fork if critical.       |
+| SSR hydration mismatch                 | Ensure server render matches client. Use dynamic imports for client-only code.  |
+| Performance budget exceeded (> 200KB)  | Code-split, lazy load, tree-shake. Check bundle size in CI.                     |
 
 ## 🚩 Red Flags / Anti-Patterns
 

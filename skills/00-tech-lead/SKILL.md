@@ -69,6 +69,34 @@ graph TD
     F --> G
 ```
 
+## ⚙️ Mechanical Directives
+
+### Phased Execution (Hard Rule)
+
+- Never attempt multi-file refactors in a single response
+- Break work into explicit phases (max 5 files per phase)
+- Complete Phase 1 → run verification → wait for approval → Phase 2
+- Document the phase plan in `docs/plans/task.md` before starting
+
+### Sub-Agent Swarming (Mandatory for >5 files)
+
+- For tasks touching >5 independent files: use `sessions_spawn` for parallel agents
+- 5-8 files per agent, each gets own context window
+- Sequential processing of large tasks guarantees context decay
+- Don't poll in loops — completion is push-based
+
+### Context Decay Awareness
+
+After 10+ messages → re-read any file before editing or dispatching agents about it.
+Re-read the original requirement before claiming task complete.
+
+### File Read Budget
+
+For files >500 LOC: use offset/limit to read in chunks (max 2000 lines).
+Never assume complete file from single read.
+
+---
+
 ## 📜 Standard Operating Procedure (SOP)
 
 ### Phase 1: Strategic Analysis
@@ -151,6 +179,9 @@ After each phase completes:
 | Tests fail after integration                   | Dispatch bug-hunter with the exact test output. Do not "fix forward"                                    |
 | Agent cannot complete (BLOCKED)                | Assess: context issue → provide more; complexity → escalate to human; scope → break into smaller pieces |
 | 3+ integration attempts fail                   | Question the architecture. Is the decomposition wrong? Escalate to human                                |
+| Agent timeout (3+ turns no output)             | Re-dispatch with 50% reduced scope. Max 2 retries → then BLOCKED + notify human                         |
+| Parallel agents deadlock (waiting on each other) | Identify the cycle. Break by assigning one agent as primary, others as sub-dependencies               |
+| Agent output contradicts original requirement  | Reject output. Re-dispatch with the requirement verbatim pasted at the top                              |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -180,18 +211,27 @@ Before claiming the orchestration is done:
 4. ONLY THEN claim completion with evidence
 ```
 
-## 💰 Token & Cost Awareness
+## ⏱️ Agent Dispatch Protocol
 
-When working with AI agents consuming this skill:
+When dispatching agents, always include:
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No completion claims without fresh verification evidence."
+```
+Dispatch template:
+- Task: [specific, bounded task — not the whole project]
+- Context: [relevant files, schemas, constraints]
+- Expected output: [format, location, scope]
+- Constraints: [what NOT to touch, boundaries]
+- Timeout: If agent doesn't respond within 3 turns, re-dispatch with simpler scope
+- Retry: Max 2 re-dispatches. If still failing → escalate to human
+```
 
-## 💡 Examples
+**Timeout handling:**
+
+- After 3 turns without output → re-dispatch with 50% reduced scope
+- After 2 failed re-dispatches → log BLOCKED, notify human, continue other work
+- Never wait indefinitely — always have a fallback plan
+
+## 🚨 Failure Modes
 
 ### Parallel Dispatch Pattern
 
@@ -220,6 +260,27 @@ When dispatching a domain expert subagent, provide:
 2. Relevant context (schema, existing code, constraints)
 3. Expected output format
 4. Constraints ("Do NOT modify files outside src/api/")
+
+### Sequential Dispatch Pattern
+
+User request: "Migrate from REST to GraphQL"
+
+Execution (sequential, each depends on previous):
+
+```
+Step 1: api-designer → Define GraphQL schema (output: schema.graphql)
+  → Review: does schema cover all existing REST endpoints?
+Step 2: backend-architect → Implement resolvers (input: schema.graphql)
+  → Review: do resolvers handle all query/mutation types?
+Step 3: test-genius → Write integration tests (input: resolvers + schema)
+  → Review: do tests cover edge cases (null, empty, auth)?
+Step 4: security-reviewer → Audit auth flow (input: full implementation)
+  → Review: any auth bypasses or injection risks?
+Step 5: doc-writer → Update API docs (input: schema.graphql)
+  → Review: docs match actual schema?
+```
+
+Rule: Never dispatch step N+1 until step N output is reviewed and approved.
 
 ### Conflict Resolution
 

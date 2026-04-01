@@ -193,6 +193,8 @@ def test_legacy_email_validation():
 | Refactoring breaks undocumented behavior | That's why characterization tests exist. Write more before changing more.               |
 | Too much debt to tackle                  | Prioritize: security > correctness > performance > style. Don't fix everything at once. |
 | Business logic in stored procedures      | Document it. Extract to application code over time. Don't ignore it.                    |
+| No documentation exists at all    | Generate docs as you explore. Every session should leave docs behind.         |
+| Code depends on deprecated library | Document the dependency. Check migration path. Don't upgrade during exploration. |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -226,16 +228,12 @@ def test_legacy_email_validation():
 7. Refactoring plan: incremental (Strangler Fig), not big-bang
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-  "No refactoring begins without understanding + characterization tests."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

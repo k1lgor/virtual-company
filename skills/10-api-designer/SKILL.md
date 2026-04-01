@@ -171,6 +171,8 @@ test("POST /users response matches schema", async () => {
 | No error responses defined                | STOP. Define error responses before implementation. Every endpoint needs at least 400 and 500. |
 | Inconsistent naming across endpoints      | Create a style guide. Apply it to all endpoints.                                               |
 | Contract too complex to understand        | Simplify. If you can't explain it in one sentence, it's too complex.                           |
+| No pagination on list endpoints          | Add cursor-based or offset pagination. Never return unbounded lists.                            |
+| No rate limiting design                  | Define rate limits per endpoint. Document in contract. Implement with headers.                   |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -202,16 +204,12 @@ test("POST /users response matches schema", async () => {
 6. Contract tests written and passing
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No implementation begins without a validated contract."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

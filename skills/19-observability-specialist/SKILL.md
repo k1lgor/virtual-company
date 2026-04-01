@@ -177,6 +177,9 @@ def handle_order():
 | Missing metrics on critical path         | Instrument the critical path. If you can't measure it, you can't improve it.                 |
 | Dashboard clutter (50+ charts)           | Focus on SLIs. Remove vanity metrics. Dashboard should answer "is it healthy?" in 5 seconds. |
 | No log retention policy                  | Define retention: debug=7d, info=30d, error=90d. Archive beyond that.                        |
+| High-cardinality metrics (10k+ series)   | Limit label values. Use bounded dimensions. Cardinality explosion crashes Prometheus.         |
+| Log volume explosion (disk full)         | Set log rotation + compression. Sample debug logs in production (1% rate).                    |
+| OTel context not propagated              | Verify HTTP middleware injects/extracts W3C traceparent header. Test with curl.               |
 
 ## 🚩 Red Flags / Anti-Patterns
 

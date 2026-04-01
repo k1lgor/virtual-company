@@ -83,6 +83,33 @@ graph TD
     K --> L
 ```
 
+## ⚙️ Mechanical Directives
+
+### No Semantic Search (Grep, not AST)
+
+When auditing for secrets/credentials/vulnerabilities, search for ALL patterns:
+
+- Direct references: `password`, `secret`, `api_key`, `token`
+- String literals, env vars, config files, hardcoded values
+- Dynamic references (template literals, concatenation)
+- Re-exports and barrel files that may re-expose sensitive modules
+- Test fixtures that may contain real credentials
+
+### Tool Result Blindness
+
+Security scans may return truncated results. If grep returns only a few hits on a large codebase, suspect truncation and re-run with narrower scope (single file, specific directory).
+
+### Context Decay Rule
+
+After 10+ messages → re-read the file being audited before making findings.
+Don't rely on memory of code you read earlier in the session.
+
+### Forced Verification
+
+Security findings must include file:line evidence. Never claim "looks clean" without running actual scans (`npm audit`, `security-sentinel.sh`, grep patterns).
+
+---
+
 ## 📜 Standard Operating Procedure (SOP)
 
 ### Phase 1: Surface Area Review
@@ -142,6 +169,8 @@ For each finding:
 | Secrets found in source code              | CRITICAL. Block merge. Rotate the secret. Add `.gitignore` rules.           |
 | Legacy code has known vulnerabilities     | Document them. Create a remediation plan. Don't approve new changes on top. |
 | Can't determine if input is sanitized     | Treat as unsanitized. Flag it. Don't assume.                                |
+| Supply chain attack (malicious package)   | Check package provenance. Verify maintainer, download count, recent commits. |
+| API key exposed in commit history         | Rotate key immediately. Use `git filter-branch` or BFG to purge history.     |
 
 ## 🚩 Red Flags / Anti-Patterns
 

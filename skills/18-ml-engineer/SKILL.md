@@ -193,6 +193,9 @@ def evaluate_rag(query, expected_answer, retriever, llm):
 | Class imbalance                             | Use stratified split, oversampling (SMOTE), or appropriate metrics (F1, not accuracy). |
 | Model works on test but fails in production | Test set may not represent production distribution. Collect production samples.        |
 | LLM hallucination in RAG                    | Add retrieval verification. Use smaller context windows. Check grounding.              |
+| Model versioning chaos          | Use MLflow/DVC. Every experiment tracked. Never overwrite trained models.     |
+| Feature store inconsistency     | Validate feature definitions. Monitor feature drift. Use point-in-time joins.  |
+| GPU OOM during training         | Reduce batch size. Use gradient accumulation. Check for memory leaks in loop.  |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -226,16 +229,12 @@ def evaluate_rag(query, expected_answer, retriever, llm):
 7. Reproducible: random seeds set, pipeline documented
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No model ships without holdout evaluation."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

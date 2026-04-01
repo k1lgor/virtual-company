@@ -215,6 +215,8 @@ print(f"Sources: {[d.page_content[:50] for d in result['source_documents']]}")
 | RAG hallucination                 | Reduce context window, add retrieval verification, use smaller chunks.   |
 | Index too large for memory        | Use quantization (PQ/SQ), disk-based indices, or sharding.               |
 | Stale index (docs not re-indexed) | Set up incremental indexing pipeline. Monitor index freshness.           |
+| Embedding cost explosion         | Cache embeddings. Batch API calls. Use smaller model for non-critical paths. |
+| Multi-tenant data leakage       | Use namespace/partition per tenant. Never share vector spaces.               |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -287,13 +289,9 @@ def hybrid_search(query, top_k=10):
 }
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No search system deploys without relevance metrics."
+"No completion claims without fresh verification evidence."

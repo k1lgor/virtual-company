@@ -210,6 +210,9 @@ Define Collaborative Links to at least 3 existing skills:
 | Agent still violates rule with skill present   | Find the rationalization loophole. Add explicit counter. Re-test.     |
 | Skill conflicts with another skill             | Define clear boundaries. Each skill owns one domain.                  |
 | Description causes agent to skip reading skill | Rewrite description to contain ONLY triggers, no workflow summary.    |
+| Generated skill is too generic     | Add domain-specific examples. Generic skills get ignored by agents.           |
+| Skill works in isolation but breaks with others | Test with team orchestration. Check integration points.                |
+| Skill template bloat over time     | Re-audit every 30 days. Remove sections that no agent ever references. |
 | Skill is too long (> 500 words)                | Move heavy reference to separate file. Keep SKILL.md scannable.       |
 | Skill has no examples                          | Add at least one concrete example. Abstract skills are hard to apply. |
 
@@ -245,16 +248,12 @@ Define Collaborative Links to at least 3 existing skills:
 6. Pressure scenario tested and agent complies
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-  "No skill deploys without testing."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

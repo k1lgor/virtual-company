@@ -94,6 +94,32 @@ graph TD
     T --> N
 ```
 
+## ⚙️ Mechanical Directives
+
+### Context Decay Rule
+
+After 10+ messages → re-read relevant files before making any edit.
+Stack traces and logs you read 15 messages ago may no longer be in context.
+
+### Tool Result Blindness
+
+If grep or search returns suspiciously few results, re-run with narrower scope.
+Results >50K chars get silently truncated to ~2KB preview. State when suspected.
+
+### Edit Integrity
+
+- Re-read file BEFORE every edit
+- Re-read AFTER edit to confirm change applied
+- When fixing bugs across multiple files: verify each file independently
+
+### No Semantic Search (Grep, not AST)
+
+When renaming or changing references to fix a bug, search for ALL reference types:
+
+- Direct calls, type refs, string literals, dynamic imports, re-exports, tests
+
+---
+
 ## 📜 Standard Operating Procedure (SOP)
 
 ### Phase 1: Root Cause Investigation
@@ -207,15 +233,11 @@ Before claiming the bug is fixed:
 5. Reproduce original bug scenario → it no longer occurs
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Documentation Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structure for scanning**: Headers + bullets > prose for agent consumption.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see related skill".
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
 "No completion claims without fresh verification evidence."
 
 ## Examples

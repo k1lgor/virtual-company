@@ -143,6 +143,23 @@ As a [user type], I want to [action], so that [benefit].
 - [Explicitly excluded features]
 ```
 
+## 📋 PM → Tech Lead Handoff
+
+When handing off a story to development, provide:
+
+```
+Handoff checklist:
+1. User story with AC (Given/When/Then)
+2. Definition of Done checklist
+3. Priority level (P0/P1/P2) with RICE score
+4. Dependencies: which skills/teams are needed
+5. Success metric: how we'll know it worked
+6. Out of scope: what is explicitly NOT included
+7. Deadline: when this must ship (or "no hard deadline")
+```
+
+If tech-lead pushes back on scope/timeline → discuss tradeoffs, not "just make it work."
+
 ## 🤝 Collaborative Links
 
 - **Architecture**: Route task planning to `tech-lead`.
@@ -161,6 +178,9 @@ As a [user type], I want to [action], so that [benefit].
 | "Just one more feature" before MVP | Define MVP explicitly. Features beyond MVP are next release.                |
 | No success metrics defined         | Define before building. How will you know it worked?                        |
 | Dependencies not identified        | Map dependencies before sprint planning. Surprise blockers = failed sprint. |
+| Stakeholders disagree on priority  | Use data: RICE scores, user research, revenue impact. Opinions < data.       |
+| Success metric can't be measured    | Find a proxy metric. "User satisfaction" → NPS or support ticket volume.      |
+| Requirements change mid-sprint      | Freeze scope. New requirement = new story for next sprint. Not negotiable.     |
 
 ## 🚩 Red Flags / Anti-Patterns
 

@@ -40,6 +40,12 @@ Before claiming documentation is complete:
   <project_root>/scripts/doc-health.sh ./
   ```
 
+  If `doc-health.sh` reports issues:
+  - Missing README → create one using template below
+  - Missing API docs → check `api-designer` output for endpoint definitions
+  - Missing code comments → add JSDoc/docstrings to exported functions
+  - Low coverage → run `doc-health.sh` with `--verbose` to see specific files
+
 ## 📍 When to Apply
 
 - "Explain how this module works."
@@ -153,6 +159,15 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for system design decisions.
 2. Create feature branch
 3. Write tests (TDD)
 4. Submit PR
+
+## Troubleshooting
+| Problem | Solution |
+|---------|----------|
+| Port already in use | `lsof -i :3000` → kill process |
+| DB connection fails | Check `.env` credentials |
+
+## License
+[MIT](./LICENSE)
 ```
 
 ## 🤝 Collaborative Links
@@ -226,14 +241,10 @@ graph LR
 6. Audience-appropriate language (dev vs user)
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Documentation Quality for AI Agents
 
-When writing documentation that will be consumed by AI agents:
-
-- **Structure for scanning**: AI agents parse headers and bullets faster than prose. Use headers > bullets > paragraphs.
-- **Front-load context**: Put the most important info in the first 500 tokens — agents have U-shaped attention curves (strong at start/end, weak in middle).
-- **Cross-reference explicitly**: Instead of "see the related module", write "see `skills/13-backend-architect/SKILL.md` — handles server logic routing". Agents resolve paths, not vague references.
-- **Link to shared context**: If this skill depends on project-wide conventions, reference `project-context.md` so agents load shared state first.
-- **Avoid redundant examples**: One excellent example > three mediocre ones. Token budget is finite.
+- **Structure for scanning**: Headers + bullets > prose for agent consumption.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see related skill".
+- **One great example > three mediocre ones**: Token budget is finite.
 
 "No documentation ships without tested code examples."

@@ -174,6 +174,9 @@ coverage/
 | Permission denied in container | Check USER directive. Fix file ownership with --chown.                  |
 | Secrets in image layers        | Use multi-stage or build secrets. Never COPY .env files.                |
 | Health check always failing    | Verify health endpoint exists. Check port mapping.                      |
+| Image vulnerability scan fails   | Update base image. Pin versions. Run trivy/grype in CI.                       |
+| Container runs as root           | Add USER directive. Never run as root in production.                          |
+| Docker Compose networking broken | Use service names, not localhost. Check network_mode and depends_on.         |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -208,26 +211,12 @@ coverage/
 8. .dockerignore present and excludes unnecessary files
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No Dockerfile ships without health check + non-root + build verification."
-
-**Mechanical Dockerfile validation:**
-
-```bash
-# Lint Dockerfile against all 10 best-practice rules
-dockerfile-lint.sh ./Dockerfile
-
-# Lint production Dockerfile specifically
-dockerfile-lint.sh ./deploy/Dockerfile.prod
-```
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

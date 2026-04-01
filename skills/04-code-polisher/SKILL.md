@@ -63,6 +63,39 @@ graph TD
     K --> L[✅ Refactoring complete]
 ```
 
+## ⚙️ Mechanical Directives
+
+### Step 0: Dead Code Purge (BEFORE any refactor on files >300 LOC)
+
+1. Remove all dead props, unused exports, unused imports, debug logs
+2. Commit this cleanup separately
+3. Only then start the real refactoring work
+
+### Edit Integrity (Mandatory)
+
+- Re-read file BEFORE every edit (don't trust memory — context decay is real)
+- Re-read AFTER every edit to confirm change applied
+- Never batch >3 edits to same file without verification read
+- The Edit tool fails silently when old_string doesn't match
+
+### No Semantic Search (Grep, not AST)
+
+When renaming or changing any name, search separately for:
+
+- Direct calls and references
+- Type-level references (interfaces, generics)
+- String literals containing the name
+- Dynamic imports and require() calls
+- Re-exports and barrel file entries
+- Test files and mocks
+
+### Context Decay Rule
+
+After 10+ messages in conversation → re-read the file before editing.
+Never trust your memory of file contents.
+
+---
+
 ## 📜 Standard Operating Procedure (SOP)
 
 ### Phase 1: Readability Audit
@@ -162,6 +195,8 @@ npm run format    # Code formatted
 | Too many smells in one function         | Refactor incrementally. ONE smell at a time. Verify after each.                 |
 | Dead code has "potential future use"    | Delete it. Git remembers. Dead code is maintenance burden.                      |
 | Team disagrees on style                 | Use automated formatter (Prettier, Black, gofmt). No debates.                   |
+| Refactoring changes public API          | DON'T. Refactoring must not change behavior. If API must change, it's a feature. |
+| Tech debt blocks new feature            | Document debt. Get prioritization from tech-lead. Don't refactor + feature together. |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -194,22 +229,12 @@ npm run format    # Code formatted
 7. Full test suite passes at the end
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write skills/XX-name/SKILL.md not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No refactoring without test verification before AND after."
-
-**Self-validation (when polishing skills):**
-
-```bash
-validate-skill.sh ./skills/04-code-polisher/SKILL.md
-```
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

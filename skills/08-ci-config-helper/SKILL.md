@@ -178,6 +178,9 @@ deploy:
 | Secrets exposed in logs                | Use `::add-mask::` or platform masking. Check echo statements.        |
 | Flaky tests in CI                      | Fix the tests. Don't just retry. Flaky CI = unreliable deployments.   |
 | Pipeline runs on every commit (noise)  | Use path filters. Skip CI for docs-only changes.                      |
+| Multi-environment promotion needed     | Use environment protection rules + manual approval gates per env.      |
+| Matrix build partially fails           | Use `fail-fast: false` to see all results, not just the first failure. |
+| Cloud deploy needs credentials         | Use OIDC (GitHub → AWS/GCP) instead of long-lived secrets.             |
 
 ## 🚩 Red Flags / Anti-Patterns
 

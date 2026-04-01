@@ -176,6 +176,8 @@ autocannon -c 100 -d 10 http://localhost:3000/api/endpoint
 | Premature optimization           | "We should make this faster" without evidence it's slow. Measure first.         |
 | Memory leak in production        | Take heap snapshot. Compare snapshots. Find the growing object.                 |
 | Database is the bottleneck       | Profile queries. Add indexes. Don't optimize application code for a DB problem. |
+| Connection pool exhaustion       | Increase pool size OR reduce connection lifetime. Monitor active/idle counts.   |
+| Memory pressure in container (OOM)| Set memory limits. Profile heap. Fix leaks before increasing container memory.  |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -209,16 +211,12 @@ autocannon -c 100 -d 10 http://localhost:3000/api/endpoint
 7. Before/after numbers documented for future reference
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No optimization is complete without before/after benchmarks."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

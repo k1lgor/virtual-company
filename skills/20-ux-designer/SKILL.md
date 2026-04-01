@@ -182,6 +182,8 @@ Every interactive element must have all states defined:
 | Motion causes motion sickness          | Respect `prefers-reduced-motion`. Provide animation toggle.                   |
 | Design works on desktop but not mobile | Test at 320px minimum. Responsive ≠ scaled-down.                              |
 | Information conveyed only by color     | Add icons, text, or patterns. Color-blind users can't distinguish.            |
+| No i18n support                      | Use i18n library from start. Never hardcode strings. Plan for RTL languages.          |
+| Dark mode missing                    | Support prefers-color-scheme. Test both light and dark. Never assume light default.  |
 
 ## 🚩 Red Flags / Anti-Patterns
 

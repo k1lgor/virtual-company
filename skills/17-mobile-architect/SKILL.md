@@ -170,6 +170,9 @@ ListView.builder(
 | Platform-specific bug             | Test on BOTH platforms. Don't assume iOS behavior = Android behavior.        |
 | Battery drain                     | Reduce background processing. Use efficient algorithms. Batch network calls. |
 | Large app bundle size             | Tree-shake unused code. Compress images. Use dynamic delivery.               |
+| Deep link breaks on missing target| Handle fallback: open home screen + show message. Validate deep link params.  |
+| App store rejection               | Follow review guidelines. Test In-App Purchase flows. No private API usage.   |
+| OTA update breaks app             | Always have rollback version. Test OTA on staging channel first.              |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -202,16 +205,12 @@ ListView.builder(
 6. Platform guidelines: Material Design (Android) or HIG (iOS) followed
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No mobile feature ships without offline handling + cross-platform testing."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

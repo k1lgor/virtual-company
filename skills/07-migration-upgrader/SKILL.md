@@ -164,6 +164,9 @@ If migration fails at any step:
 | New library has different performance characteristics | Benchmark both. Document the difference.                                       |
 | Can't migrate incrementally (big-bang)                | Document risk. Get explicit approval. Have rollback ready.                     |
 | Dependency conflicts between old and new              | Use version pinning. May need to migrate transitive dependencies too.          |
+| Rollback itself fails (data already migrated)         | Have DB snapshot/backup before starting. Restore from snapshot, not git revert. |
+| Database schema migration needed alongside code       | Separate phases: migrate DB schema first (backward-compatible), then code.     |
+| Zero-downtime requirement                             | Use feature flags, blue-green deploy, or canary releases. Never migrate live.  |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -197,16 +200,12 @@ If migration fails at any step:
 7. Rollback plan documented (even though migration is done)
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No migration completes without full regression testing."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

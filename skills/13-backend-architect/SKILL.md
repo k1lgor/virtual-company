@@ -181,6 +181,8 @@ app.use((err, req, res, next) => {
 | Input validation missing           | Add it NOW. Never trust client data.                                  |
 | Error leaks internal details       | Sanitize error messages. Never expose stack traces to clients.        |
 | N+1 query detected                 | Use DataLoader (GraphQL) or batch queries. Never query in a loop.     |
+| Graceful degradation needed            | Implement circuit breaker + fallback. Never let one failure cascade to all.        |
+| Connection pool sizing wrong           | Monitor active/idle/waiting connections. Size = (cores × 2) + effective_spindle_count |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -214,16 +216,12 @@ app.use((err, req, res, next) => {
 7. No console.error output during normal operation
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No endpoint ships without test + validation + error handling."
+"No completion claims without fresh verification evidence."
 
 ## Examples
 

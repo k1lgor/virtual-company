@@ -183,6 +183,8 @@ def load(df: pd.DataFrame, db_connection):
 | Schema change breaks existing code | Check for backwards compatibility. Use additive changes (new columns, not renames). |
 | ETL pipeline silently drops rows   | Add row count validation at each stage. Log dropped rows with reasons.              |
 | Duplicate data after pipeline run  | Add unique constraints. Make pipeline idempotent.                                   |
+| Schema evolution (add column, rename) | Use additive changes only. Never rename/drop in production. Use shadow columns.        |
+| CDC (change data capture) breaks       | Validate event ordering. Handle out-of-order events with watermarks.               |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -250,13 +252,9 @@ def etl_pipeline(source, target):
     assert loaded == clean.shape[0], f"Row mismatch: {loaded} != {clean.shape[0]}"  # output gate
 ```
 
-## 💰 Token & Cost Awareness
+## 💰 Quality for AI Agents
 
-When working with AI agents consuming this skill:
+- **Structured formats**: Headers + bullets > prose.
+- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not vague references.
 
-- **Front-load context**: Place the most critical info in the first 500 tokens — agents have U-shaped attention (strong at start/end, weak in middle).
-- **Use structured formats**: Headers, tables, and bullets > prose. Agents parse structure faster.
-- **Cross-reference paths**: Write `skills/XX-name/SKILL.md` not "see the related skill". Agents resolve paths.
-- **One great example > three mediocre ones**: Token budget is finite. Quality over quantity.
-- **Keep scannable**: If a section exceeds 40 lines, split it with a sub-header.
-"No pipeline ships without validation at every stage."
+"No completion claims without fresh verification evidence."
