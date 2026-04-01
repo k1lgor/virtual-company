@@ -6,10 +6,7 @@
     "name": "Plamen Ivanov",
     "url": "https://github.com/k1lgor"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/k1lgor/virtual-company"
-  },
+  "repository": "https://github.com/k1lgor/virtual-company",
   "homepage": "https://github.com/k1lgor/virtual-company#readme",
   "license": "MIT",
   "keywords": [
