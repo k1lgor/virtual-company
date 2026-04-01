@@ -272,7 +272,7 @@ Level 4: Escalate to human with: what failed, what was tried, what's blocking
 The following lifecycle hooks are active in every session:
 
 - **SessionStart**: Initializes the Virtual Company profile and reports active tasks.
-- **PostEdit**: Automatically triggers a linting/formatting pass after any file change.
+- **PostToolUse**: Automatically triggers a linting/formatting pass after any file change.
 
 ---
 

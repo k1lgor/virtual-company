@@ -2,32 +2,44 @@
   "hooks": {
     "SessionStart": [
       {
-        "type": "command",
-        "description": "Initialize the Virtual Company session greeting.",
-        "command": "echo \"🏢 Virtual Company v1.1.0 Initialized. All Experts and Agents online.\""
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"🏢 Virtual Company v1.3.1 Initialized. All Experts and Agents online.\""
+          }
+        ]
       }
     ],
-    "PostEdit": [
+    "PostToolUse": [
       {
-        "type": "command",
-        "matcher": "*.{js,ts,tsx,py}",
-        "description": "Auto-refinement hook for code quality.",
-        "command": "echo \"🪄 Running auto-refinement pass...\" && (npm run lint || echo \"⚠️ Linting check skipped: No linter found or check failed.\")"
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"🪄 Running auto-refinement pass...\" && (bun run lint || echo \"⚠️ Linting check skipped: No linter found or check failed.\")"
+          }
+        ]
       }
     ],
     "PreToolUse": [
       {
-        "type": "command",
         "matcher": "Write|Edit|MultiEdit",
-        "description": "Security Sentinel: Prevents accidental credential leakage.",
-        "command": "if grep -qE '([^a-zA-Z0-9_-]|^)(AIza[0-9A-Za-z-_]{35}|sk-[a-zA-Z0-9]{48}|ghp_[a-zA-Z0-9]{36}|[0-9a-f]{32})' /dev/stdin; then echo \"❌ [Security Sentinel] Potential secret detected in edit buffer. Aborting tool call.\"; exit 2; fi"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if grep -qE '([^a-zA-Z0-9_-]|^)(AIza[0-9A-Za-z-_]{35}|sk-[a-zA-Z0-9]{48}|ghp_[a-zA-Z0-9]{36}|[0-9a-f]{32})' /dev/stdin; then echo \"❌ [Security Sentinel] Potential secret detected in edit buffer. Aborting tool call.\"; exit 2; fi"
+          }
+        ]
       }
     ],
     "PreCompact": [
       {
-        "type": "prompt",
-        "description": "Summarize progress before context compaction.",
-        "prompt": "The context is about to be compacted. Summarize the current progress of the task in one concise sentence to ensure we don't lose track of our immediate objective. Focus on what was just done and what remains."
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "The context is about to be compacted. Summarize the current progress of the task in one concise sentence to ensure we don't lose track of our immediate objective. Focus on what was just done and what remains."
+          }
+        ]
       }
     ]
   }
