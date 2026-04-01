@@ -20,14 +20,16 @@ The Virtual Company operates on three integrated layers:
 
 The easiest way to install the Virtual Company is via the official Marketplace:
 
-1.  **Add Marketplace**:
+1.  **Add Marketplace** (uses GitHub `owner/repo` shorthand):
     ```bash
-    /plugin marketplace add virtual-company https://github.com/k1lgor/virtual-company
+    /plugin marketplace add k1lgor/virtual-company
     ```
-2.  **Install Plugin**:
+2.  **Install Plugin** (use the plugin name `virtual-company`, not the GitHub path):
     ```bash
     /plugin install virtual-company
     ```
+
+> **Note:** Step 1 registers the marketplace using the GitHub shorthand `k1lgor/virtual-company`. Step 2 installs the plugin by its name (`virtual-company`) as defined inside the marketplace. Running `/plugin install k1lgor/virtual-company` will fail because `k1lgor/virtual-company` is the repository path, not the plugin name.
 
 ### 🛠️ Manual Installation (Developers)
 
