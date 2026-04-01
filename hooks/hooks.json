@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"🏢 Virtual Company v1.1.0 Initialized. All Experts and Agents online.\""
+            "command": "echo \"🏢 Virtual Company v1.3.1 Initialized. All Experts and Agents online.\""
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"🪄 Running auto-refinement pass...\" && (npm run lint || echo \"⚠️ Linting check skipped: No linter found or check failed.\")"
+            "command": "echo \"🪄 Running auto-refinement pass...\" && (bun run lint || echo \"⚠️ Linting check skipped: No linter found or check failed.\")"
           }
         ]
       }
