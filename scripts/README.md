@@ -19,7 +19,7 @@ Checks if a SKILL.md has all required sections and returns a quality score (1-10
 
 ### 2. `security-sentinel.sh` — Enhanced Secret Scanner
 
-Scans files for leaked secrets and credentials across 13+ patterns.
+Scans files for leaked secrets and credentials across 18+ patterns.
 
 ```bash
 ./scripts/security-sentinel.sh --text src/ config/
@@ -48,22 +48,7 @@ Run any command as a verification gate and optionally log the result.
 
 ---
 
-### 4. `tsv-log.sh` — Autoresearch TSV Logger
-
-Log iteration results for autoresearch tracking with automatic delta calculation.
-
-```bash
-./scripts/tsv-log.sh --iteration 3 --skill "bug-hunter" --metric 8.5 --status keep --description "Found critical bug"
-./scripts/tsv-log.sh --summary
-```
-
-**Log format:** `iteration | timestamp | skill | metric | delta | status | description`
-**Summary:** Total iterations, keep rate, best metric per skill.
-**Status:** `keep`, `discard`, or `fix`.
-
----
-
-### 5. `coverage-gate.sh` — Test Coverage Gate
+### 4. `coverage-gate.sh` — Test Coverage Gate
 
 Run tests and enforce coverage meets a threshold.
 
@@ -79,23 +64,9 @@ Run tests and enforce coverage meets a threshold.
 
 ---
 
-### 6. `dockerfile-lint.sh` — Dockerfile Best Practices Checker
+### 5. `audit-deps.sh` — Dependency Vulnerability Scanner
 
-Validate Dockerfiles against 10 security and best practice rules.
-
-```bash
-./scripts/dockerfile-lint.sh ./Dockerfile
-./scripts/dockerfile-lint.sh ./deploy/Dockerfile.prod
-```
-
-**Rules:** USER instruction, HEALTHCHECK, multi-stage build, no broad COPY/ADD, no privileged ports, specific image tags, no apt-get upgrade, LABEL metadata, no secrets in ENV/ARG, .dockerignore.
-**Exit:** 0 if score ≥ 8/10, 1 otherwise.
-
----
-
-### 7. `audit-deps.sh` — Dependency Vulnerability Scanner
-
-Check project dependencies for known CVEs.
+Check project dependencies for known CVEs across multiple languages.
 
 ```bash
 ./scripts/audit-deps.sh
@@ -104,19 +75,6 @@ Check project dependencies for known CVEs.
 
 **Auto-detect:** Node (npm audit), Python (pip-audit), Go (govulncheck), Rust (cargo audit), Ruby (bundle audit).
 **Exit:** 0 if no critical/high, 1 if critical, 2 if high.
-
----
-
-### 8. `doc-health.sh` — Documentation Health Check
-
-Validate project documentation completeness (10 checks).
-
-```bash
-./scripts/doc-health.sh ./
-```
-
-**Checks:** README (>200 words), Installation section, Usage section, API docs, no TODO/FIXME, tagged code blocks, valid links, CHANGELOG, LICENSE, CONTRIBUTING.
-**Exit:** 0 if score ≥ 7/10, 1 otherwise.
 
 ---
 
@@ -143,5 +101,4 @@ All scripts follow these conventions:
 - `--help` flag with usage info
 - Colored output (green PASS, red FAIL, yellow WARNING)
 - Executable permissions (`chmod +x`)
-- Comments explaining each section
 - Linux (Debian) compatible — no macOS-specific commands

@@ -83,7 +83,7 @@ If no type-checker is configured, state that explicitly instead of claiming succ
 - Dynamic imports and require() calls
 - Re-exports and barrel file entries
 - Test files and mocks
-Do not assume a single grep caught everything.
+- Do not assume a single grep caught everything.
 
 ### Enforcement
 
@@ -144,14 +144,14 @@ graph TD
 
 Invoke these roles using `Agent(name, "task")` for isolated, high-effort delegation:
 
-| Role              | Expertise      | Primary Focus                                            |
-| :---------------- | :------------- | :------------------------------------------------------- |
-| **planner**       | Strategy       | Milestones, task decomposition, and quality gates.       |
-| **architect**     | Design         | System architecture, ADRs, and schema definitions.       |
-| **tech-lead**     | Implementation | Coordination, code standards, and technical delivery.    |
-| **code-reviewer** | Audit          | Peer review, maintainability, and naming standards.      |
-| **security**      | Protection     | Vulnerability scanning and risk mitigation.              |
-| **qa-engineer**   | Verification   | Automated testing, E2E validation, and bug reproduction. |
+| Role                  | Expertise      | Primary Focus                                            |
+| :-------------------- | :------------- | :------------------------------------------------------- |
+| **planner**           | Strategy       | Milestones, task decomposition, and quality gates.       |
+| **architect**         | Design         | System architecture, ADRs, and schema definitions.       |
+| **tech-lead**         | Implementation | Coordination, code standards, and technical delivery.    |
+| **code-reviewer**     | Audit          | Peer review, maintainability, and naming standards.      |
+| **security-reviewer** | Protection     | Vulnerability scanning and risk mitigation.              |
+| **qa-engineer**       | Verification   | Automated testing, E2E validation, and bug reproduction. |
 
 ---
 
@@ -159,15 +159,15 @@ Invoke these roles using `Agent(name, "task")` for isolated, high-effort delegat
 
 Invoke these experts directly using `/expert-name` for specific technical problems:
 
-| Category           | experts                                                                                                |
-| :----------------- | :----------------------------------------------------------------------------------------------------- |
-| **Orchestration**  | `tech-lead`, `product-manager`, `workflow-orchestrator`, `skill-generator`                             |
-| **Logic**          | `backend-architect`, `api-designer`, `data-engineer`, `ml-engineer`                                    |
-| **Frontend**       | `frontend-architect`, `ux-designer`, `mobile-architect`                                                |
-| **Quality**        | `bug-hunter`, `test-genius`, `security-reviewer`, `e2e-test-specialist`                                |
-| **Infrastructure** | `infra-architect`, `docker-expert`, `k8s-orchestrator`, `ci-config-helper`, `observability-specialist` |
-| **Analysis**       | `search-vector-architect`, `legacy-archaeologist`, `data-analyst`                                      |
-| **Maintenance**    | `migration-upgrader`, `code-polisher`, `doc-writer`                                                    |
+| Category           | experts                                                                                                                        |
+| :----------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| **Orchestration**  | `tech-lead`, `product-manager`, `workflow-orchestrator`, `skill-generator`                                                     |
+| **Logic**          | `backend-architect`, `api-designer`, `data-engineer`, `ml-engineer`                                                            |
+| **Frontend**       | `frontend-architect`, `ux-designer`, `mobile-architect`                                                                        |
+| **Quality**        | `bug-hunter`, `test-genius`, `security-reviewer`, `e2e-test-specialist`                                                        |
+| **Infrastructure** | `infra-architect`, `docker-expert`, `k8s-orchestrator`, `ci-config-helper`, `observability-specialist`, `performance-profiler` |
+| **Analysis**       | `search-vector-architect`, `legacy-archaeologist`, `data-analyst`                                                              |
+| **Maintenance**    | `migration-upgrader`, `code-polisher`, `doc-writer`                                                                            |
 
 ---
 
@@ -285,11 +285,8 @@ All hard gates are enforced by concrete scripts in `<project_root>/scripts/`. Us
 | `validate-skill.sh`    | Validate SKILL.md quality (score 1-10) | `validate-skill.sh ./skills/02-bug-hunter/SKILL.md`                      |
 | `security-sentinel.sh` | Scan for leaked secrets/credentials    | `security-sentinel.sh --text src/`                                       |
 | `verify-gate.sh`       | Run verification command + log result  | `verify-gate.sh --gate-name lint --command "eslint ." --log gates.tsv`   |
-| `tsv-log.sh`           | Log autoresearch iteration results     | `tsv-log.sh --iteration 3 --skill bug-hunter --metric 8.5 --status keep` |
 | `coverage-gate.sh`     | Enforce test coverage threshold        | `coverage-gate.sh --threshold 80`                                        |
-| `dockerfile-lint.sh`   | Validate Dockerfile best practices     | `dockerfile-lint.sh ./Dockerfile`                                        |
 | `audit-deps.sh`        | Check dependencies for CVEs            | `audit-deps.sh --severity high --fix`                                    |
-| `doc-health.sh`        | Validate documentation completeness    | `doc-health.sh ./`                                                       |
 
 **Gate verification pattern:** Use `verify-gate.sh` to run any command as a logged gate check:
 

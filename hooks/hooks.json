@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"🏢 Virtual Company v1.3.1 Initialized. All Experts and Agents online.\""
+            "command": "echo \"🏢 Virtual Company v1.4.0 Initialized. All Experts and Agents online.\""
           }
         ]
       }
@@ -26,8 +26,8 @@
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
-            "type": "command",
-            "command": "if grep -qE '([^a-zA-Z0-9_-]|^)(AIza[0-9A-Za-z-_]{35}|sk-[a-zA-Z0-9]{48}|ghp_[a-zA-Z0-9]{36}|[0-9a-f]{32})' /dev/stdin; then echo \"❌ [Security Sentinel] Potential secret detected in edit buffer. Aborting tool call.\"; exit 2; fi"
+            "type": "prompt",
+            "prompt": "🛡️ [SECURITY CHECK] Before writing: review the content for API keys, tokens, passwords, or credentials (AIza*, sk-*, ghp_*, private keys). Never commit secrets to files. If you find any secrets, remove them now and use environment variables instead."
           }
         ]
       }

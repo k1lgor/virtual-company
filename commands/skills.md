@@ -131,16 +131,15 @@ graph TD
 
 ### Step 2: Categorize
 
-| Category           | Skills                                                                                       |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| **Orchestration**  | tech-lead, product-manager, workflow-orchestrator, skill-generator                           |
-| **Logic**          | backend-architect, api-designer, data-engineer, ml-engineer                                  |
-| **Frontend**       | frontend-architect, ux-designer, mobile-architect                                            |
-| **Quality**        | bug-hunter, test-genius, security-reviewer, e2e-test-specialist                              |
-| **Infrastructure** | infra-architect, docker-expert, k8s-orchestrator, ci-config-helper, observability-specialist |
-| **Analysis**       | search-vector-architect, legacy-archaeologist, data-analyst                                  |
-| **Maintenance**    | migration-upgrader, code-polisher, doc-writer                                                |
-| **Meta**           | skill-generator                                                                              |
+| Category           | Skills                                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| **Orchestration**  | tech-lead, product-manager, workflow-orchestrator, skill-generator                                                 |
+| **Logic**          | backend-architect, api-designer, data-engineer, ml-engineer                                                        |
+| **Frontend**       | frontend-architect, ux-designer, mobile-architect                                                                  |
+| **Quality**        | bug-hunter, test-genius, security-reviewer, e2e-test-specialist                                                    |
+| **Infrastructure** | infra-architect, docker-expert, k8s-orchestrator, ci-config-helper, observability-specialist, performance-profiler |
+| **Analysis**       | search-vector-architect, legacy-archaeologist, data-analyst                                                        |
+| **Maintenance**    | migration-upgrader, code-polisher, doc-writer                                                                      |
 
 ### Step 3: Format Output
 

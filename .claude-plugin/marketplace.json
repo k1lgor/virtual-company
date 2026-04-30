@@ -1,24 +1,18 @@
 {
   "name": "virtual-company",
-  "owner": {
-    "name": "Plamen Ivanov",
-    "url": "https://github.com/k1lgor"
-  },
+  "owner": { "name": "Plamen Ivanov", "url": "https://github.com/k1lgor" },
   "metadata": {
-    "description": "Professional 3-Tier AI Engine for Claude Code: 27 Experts with Quality Gates, 6 Strategic Agents, 8 Verification Scripts, and Automated Lifecycle Hooks.",
-    "version": "1.3.1",
-    "updated": "2026-04-01"
+    "description": "Professional 3-Tier AI Engine for Claude Code: 27 Experts with Quality Gates, 6 Strategic Agents, 5 Verification Scripts, and Automated Lifecycle Hooks.",
+    "version": "1.4.0",
+    "updated": "2026-04-30"
   },
   "plugins": [
     {
       "name": "virtual-company",
       "source": "./",
-      "description": "27 Domain Experts with Hard Gates & Iron Laws, 6 Strategic Agents, 8 Verification Scripts, and Native Lifecycle Hooks.",
-      "version": "1.3.1",
-      "author": {
-        "name": "Plamen Ivanov",
-        "url": "https://github.com/k1lgor"
-      },
+      "description": "27 Domain Experts with Hard Gates & Iron Laws, 6 Strategic Agents, 5 Verification Scripts, and Native Lifecycle Hooks.",
+      "version": "1.4.0",
+      "author": { "name": "Plamen Ivanov", "url": "https://github.com/k1lgor" },
       "repository": "https://github.com/k1lgor/virtual-company",
       "homepage": "https://github.com/k1lgor/virtual-company#readme",
       "license": "MIT",

@@ -171,17 +171,17 @@ After each phase completes:
 
 ## 🚨 Failure Modes
 
-| Situation                                      | Response                                                                                                |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Agent returns incomplete output                | Re-dispatch with more specific instructions, include what was missing                                   |
-| Two agents produce conflicting changes         | STOP. Analyze the conflict. Merge manually before proceeding                                            |
-| Security reviewer finds critical vulnerability | Block completion. Fix must happen before anything ships                                                 |
-| Tests fail after integration                   | Dispatch bug-hunter with the exact test output. Do not "fix forward"                                    |
-| Agent cannot complete (BLOCKED)                | Assess: context issue → provide more; complexity → escalate to human; scope → break into smaller pieces |
-| 3+ integration attempts fail                   | Question the architecture. Is the decomposition wrong? Escalate to human                                |
-| Agent timeout (3+ turns no output)             | Re-dispatch with 50% reduced scope. Max 2 retries → then BLOCKED + notify human                         |
-| Parallel agents deadlock (waiting on each other) | Identify the cycle. Break by assigning one agent as primary, others as sub-dependencies               |
-| Agent output contradicts original requirement  | Reject output. Re-dispatch with the requirement verbatim pasted at the top                              |
+| Situation                                        | Response                                                                                                |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Agent returns incomplete output                  | Re-dispatch with more specific instructions, include what was missing                                   |
+| Two agents produce conflicting changes           | STOP. Analyze the conflict. Merge manually before proceeding                                            |
+| Security reviewer finds critical vulnerability   | Block completion. Fix must happen before anything ships                                                 |
+| Tests fail after integration                     | Dispatch bug-hunter with the exact test output. Do not "fix forward"                                    |
+| Agent cannot complete (BLOCKED)                  | Assess: context issue → provide more; complexity → escalate to human; scope → break into smaller pieces |
+| 3+ integration attempts fail                     | Question the architecture. Is the decomposition wrong? Escalate to human                                |
+| Agent timeout (3+ turns no output)               | Re-dispatch with 50% reduced scope. Max 2 retries → then BLOCKED + notify human                         |
+| Parallel agents deadlock (waiting on each other) | Identify the cycle. Break by assigning one agent as primary, others as sub-dependencies                 |
+| Agent output contradicts original requirement    | Reject output. Re-dispatch with the requirement verbatim pasted at the top                              |
 
 ## 🚩 Red Flags / Anti-Patterns
 
@@ -293,3 +293,30 @@ Two agents produce conflicting changes:
 4. Merge manually with explicit rationale.
 5. Re-verify integration before proceeding.
 ```
+
+## 💡 Examples
+
+### Full-Stack Feature: User Profile Settings
+
+**Request:** "Add a user profile settings page with avatar upload and email change."
+
+**Plan (tech-lead):**
+
+```
+Phase 1: Design — Owner: architect
+  - ADR for avatar storage (S3 vs local) — Done when: ADR merged
+  - Schema for user settings API — Done when: OpenAPI spec written
+
+Phase 2: Backend — Owner: backend-architect
+  - PUT /api/user/profile endpoint — Done when: updates profile, tests pass
+  - POST /api/user/avatar endpoint — Done when: uploads image, validates size, tests pass
+  - Email change confirmation flow — Done when: sends verification email, tests pass
+
+Phase 3: Frontend — Owner: frontend-architect (depends on Phase 2)
+  - Profile settings form — Done when: renders fields from API
+  - Avatar upload with preview — Done when: uploads image, shows preview
+
+Gates: security-reviewer audits file upload (Phase 2) | qa-engineer runs E2E (Phase 3)
+```
+
+**Dispatch order:** architect (Phase 1) → backend-architect (Phase 2) → frontend-architect + security-reviewer (parallel Phase 3) → qa-engineer (final).

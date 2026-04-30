@@ -1,0 +1,58 @@
+name: Release Notes
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Generate Release Notes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          # Extract section between current version header and next version header (or end of diff links)
+          awk -v ver="$VERSION" '
+            BEGIN { found=0; output="" }
+            /^## \[/ {
+              if (found) exit
+              # Match the version we want (e.g., [1.4.0])
+              gsub(/^## \[/, "")
+              gsub(/\].*/, "")
+              if ($0 == ver) found=1
+              next
+            }
+            found { output = output $0 "\n" }
+            END {
+              # Trim trailing diff links
+              sub(/\n\[.*\n$/, "", output)
+              print output
+            }
+          ' CHANGELOG.md > /tmp/release_body.md
+          echo "BODY<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/release_body.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "v${{ steps.version.outputs.VERSION }}"
+          body_path: /tmp/release_body.md
+          draft: false
+          prerelease: false
+          generate_release_notes: false
