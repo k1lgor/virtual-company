@@ -32,6 +32,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugin description updated to reflect 5 verification scripts
 - README project structure diagram now shows all actual directories (`commands/`, `scripts/`, `.claude-plugin/`)
 
+## [1.4.1] — 2026-06-21
+
+### Added
+
+- Examples section added to `19-observability-specialist` SKILL.md (structured logging, Prometheus/Grafana, OpenTelemetry tracing, alert rules)
+
+### Fixed
+
+- Stale references to deleted scripts (`doc-health.sh`, `tsv-log.sh`, `dockerfile-lint.sh`) in README.md, commands/skills.md, and skills/01-doc-writer/SKILL.md
+- PostToolUse lint hook now gracefully skips when no linter is configured (instead of erroring)
+
+### Changed
+
+- Agent frontmatter: `qa-engineer` added missing `disallowedTools` (Edit, Bash), fixed `maxTurns` spacing
+- Agent frontmatter: `tech-lead` fixed `maxTurns` spacing
+- `docs/` directory now tracked in git (was gitignored); `.pantheon/` added to `.gitignore`
+
 ## [1.3.1] — 2026-04-01
 
 ### Fixed
@@ -94,6 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLAUDE.md with orchestration flow, decision trees, and failure modes
 - MIT License
 
+[1.4.1]: https://github.com/k1lgor/virtual-company/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/k1lgor/virtual-company/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/k1lgor/virtual-company/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/k1lgor/virtual-company/compare/v1.2.0...v1.3.0
