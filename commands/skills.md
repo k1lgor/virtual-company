@@ -270,7 +270,7 @@ Use these scripts to validate skill health before listing:
 | Script                      | Purpose                                                         | Usage                                             |
 | --------------------------- | --------------------------------------------------------------- | ------------------------------------------------- |
 | `scripts/validate-skill.sh` | Validate SKILL.md quality (frontmatter, sections, placeholders) | `bash scripts/validate-skill.sh skills/`          |
-| `scripts/tsv-log.sh`        | Log listing results as TSV for analytics                        | `bash scripts/tsv-log.sh /tmp/skills-listing.tsv` |
+| `scripts/verify-gate.sh`    | Run verification commands and log results to TSV                 | `bash scripts/verify-gate.sh --gate-name "skill-validate" --command "validate-skill.sh skills/" --log gates.tsv` |
 
 **Pre-flight check:** Before displaying skills, run:
 

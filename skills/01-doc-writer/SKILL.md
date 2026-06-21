@@ -34,17 +34,17 @@ Before claiming documentation is complete:
 - **Mapping**: Use `Glob` to identify undocumented modules or missing READMEs.
 - **Execution**: Use `Edit` to create README.md or update source comments.
 - **Verification**: Use `Bash` to run code examples and verify they work.
-- **Doc Health Check**: Use `doc-health.sh` to validate documentation completeness:
+- **Doc Quality Check**: Use `validate-skill.sh` to validate SKILL.md documentation completeness:
 
   ```bash
-  <project_root>/scripts/doc-health.sh ./
+  <project_root>/scripts/validate-skill.sh ./skills/01-doc-writer/SKILL.md
   ```
 
-  If `doc-health.sh` reports issues:
+  Expect a score of 9/10 or higher. Common documentation gaps:
   - Missing README → create one using template below
   - Missing API docs → check `api-designer` output for endpoint definitions
   - Missing code comments → add JSDoc/docstrings to exported functions
-  - Low coverage → run `doc-health.sh` with `--verbose` to see specific files
+  - Low coverage → use `Glob` to find undocumented modules and address each
 
 ## 📍 When to Apply
 

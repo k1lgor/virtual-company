@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"🪄 Running auto-refinement pass...\" && (bun run lint || echo \"⚠️ Linting check skipped: No linter found or check failed.\")"
+            "command": "if [ -f package.json ] && grep -q '\"lint\"' package.json 2>/dev/null; then bun run lint; else echo \"🪄 Auto-refinement: no linter configured, skipping.\"; fi"
           }
         ]
       }
