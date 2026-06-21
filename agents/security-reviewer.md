@@ -4,7 +4,7 @@ description: Professional security audit, vulnerability scanning, and risk asses
 model: sonnet
 effort: high
 maxTurns: 15
-disallowedTools: Edit, Bash
+disallowedTools: [Edit, Bash]
 skills: [05-security-reviewer, 25-legacy-archaeologist]
 ---
 

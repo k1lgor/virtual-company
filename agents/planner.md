@@ -4,7 +4,7 @@ description: Strategic project planning, task breakdown, and milestone definitio
 model: sonnet
 effort: high
 maxTurns: 15
-disallowedTools: Edit, Bash
+disallowedTools: [Edit, Bash]
 ---
 
 # 📅 Strategic Planner

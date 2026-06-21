@@ -4,7 +4,7 @@ description: Systematic code audit, formatting enforcement, and maintainability 
 model: sonnet
 effort: high
 maxTurns: 10
-disallowedTools: Edit, Bash
+disallowedTools: [Edit, Bash]
 skills: [01-doc-writer, 04-code-polisher, 25-legacy-archaeologist]
 ---
 

@@ -4,7 +4,7 @@ description: High-level system design, ADRs, database schema planning, and tech 
 model: sonnet
 effort: high
 maxTurns: 20
-disallowedTools: Edit, Bash
+disallowedTools: [Edit, Bash]
 skills:
   [
     00-tech-lead,

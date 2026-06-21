@@ -4,7 +4,7 @@ description: Automated testing, E2E validation, and bug reproduction.
 model: sonnet
 effort: high
 maxTurns: 20
-disallowedTools: Edit, Bash
+disallowedTools: [Edit]
 skills:
   [
     02-bug-hunter,
