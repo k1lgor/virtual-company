@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"🏢 Virtual Company v1.4.0 Initialized. All Experts and Agents online.\""
+            "command": "echo \"🏢 Virtual Company v1.4.1 Initialized. All Experts and Agents online.\""
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -f package.json ] && grep -q '\"lint\"' package.json 2>/dev/null; then bun run lint; else echo \"🪄 Auto-refinement: no linter configured, skipping.\"; fi"
+            "command": "if [ -f package.json ]; then (npm run lint 2>/dev/null || bun run lint 2>/dev/null || yarn lint 2>/dev/null || pnpm lint 2>/dev/null || echo \"🪄 Auto-refinement: linting skipped.\"); fi"
           }
         ]
       }

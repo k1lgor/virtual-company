@@ -1,6 +1,6 @@
 {
   "name": "virtual-company",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "27 specialized agent skills with Hard Gates, Iron Laws, Decision Trees, Failure Modes, 5 verification scripts, and 6 strategic agents for professional engineering orchestration.",
   "author": { "name": "Plamen Ivanov", "url": "https://github.com/k1lgor" },
   "repository": "https://github.com/k1lgor/virtual-company",

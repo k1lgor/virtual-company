@@ -7,11 +7,11 @@ maxTurns: 20
 disallowedTools: [Edit, Bash]
 skills:
   [
-    00-tech-lead,
+    01-doc-writer,
     09-infra-architect,
     10-api-designer,
-    13-backend-architect,
     12-frontend-architect,
+    13-backend-architect,
   ]
 ---
 

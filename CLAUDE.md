@@ -273,6 +273,8 @@ The following lifecycle hooks are active in every session:
 
 - **SessionStart**: Initializes the Virtual Company profile and reports active tasks.
 - **PostToolUse**: Automatically triggers a linting/formatting pass after any file change.
+- **PreToolUse**: Injects a security prompt before file writes — checks for API keys, tokens, and credentials.
+- **PreCompact**: Injects a context continuity prompt before compaction — summarizes current progress to prevent task drift.
 
 ---
 
@@ -319,6 +321,7 @@ Maintain session context using the standard task template:
 
 - **Domain Experts (/skills)**: 27 specialized technical commands for direct execution.
 - **Strategic Roles (/agents)**: 6 native subagents for complex multi-phase delegation.
+- **Commands (/commands)**: Slash command definitions for plugin feature discovery.
 - **Lifecycle Logic (/hooks)**: Automated quality enforcement and session management.
 - **Task State (/docs/plans/task.md)**: Persistent session state across multi-step work.
 

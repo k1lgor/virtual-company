@@ -33,7 +33,7 @@ Category mapping must be current:
 1. Every skill in the directory appears in exactly one category
 2. No orphan skills (uncategorized)
 3. No ghost skills (listed but file missing)
-4. Run validation: `bash scripts/validate-skill.sh skills/` before displaying
+4. Run validation: `for f in skills/*/SKILL.md; do bash scripts/validate-skill.sh "$f"; done` before displaying
 </HARD-GATE>
 
 ---
@@ -106,7 +106,7 @@ graph TD
 **Show skills by category:**
 
 ```
-/virtual-company:skills --category architecture
+/virtual-company:skills --category logic
 ```
 
 **Search for specific domain:**
@@ -182,7 +182,7 @@ Tip: Use /bug-hunter for "why is this test failing?"
 **Category view:**
 
 ```
-# Architecture Skills (4 experts)
+# Logic Skills (4 experts)
 
 ## api-designer
 **Use when:** Designing REST/GraphQL APIs, defining contracts, writing OpenAPI specs
@@ -269,13 +269,13 @@ Use these scripts to validate skill health before listing:
 
 | Script                      | Purpose                                                         | Usage                                             |
 | --------------------------- | --------------------------------------------------------------- | ------------------------------------------------- |
-| `scripts/validate-skill.sh` | Validate SKILL.md quality (frontmatter, sections, placeholders) | `bash scripts/validate-skill.sh skills/`          |
-| `scripts/verify-gate.sh`    | Run verification commands and log results to TSV                 | `bash scripts/verify-gate.sh --gate-name "skill-validate" --command "validate-skill.sh skills/" --log gates.tsv` |
+| `scripts/validate-skill.sh` | Validate SKILL.md quality (frontmatter, sections, placeholders) | `bash scripts/validate-skill.sh skills/00-tech-lead/SKILL.md`          |
+| `scripts/verify-gate.sh`    | Run verification commands and log results to TSV                 | `bash scripts/verify-gate.sh --gate-name "skill-validate" --command "validate-skill.sh skills/00-tech-lead/SKILL.md" --log gates.tsv` |
 
 **Pre-flight check:** Before displaying skills, run:
 
 ```bash
-bash scripts/validate-skill.sh skills/ 2>&1 | grep -c "FAIL"
+for f in skills/*/SKILL.md; do bash scripts/validate-skill.sh "$f"; done 2>&1 | grep -c "FAIL"
 ```
 
 If any FAIL, include them in the error section of the output.
