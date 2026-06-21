@@ -5,13 +5,7 @@ model: sonnet
 effort: high
 maxTurns: 20
 disallowedTools: [Edit]
-skills:
-  [
-    02-bug-hunter,
-    03-test-genius,
-    06-performance-profiler,
-    22-e2e-test-specialist,
-  ]
+skills: [02-bug-hunter, 03-test-genius, 06-performance-profiler, 22-e2e-test-specialist]
 ---
 
 # 🔎 Lead QA & Test Engineer

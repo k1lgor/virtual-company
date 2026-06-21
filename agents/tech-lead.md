@@ -5,15 +5,7 @@ model: sonnet
 effort: high
 maxTurns: 30
 disallowedTools: []
-skills:
-  [
-    00-tech-lead,
-    04-code-polisher,
-    07-migration-upgrader,
-    11-data-engineer,
-    14-docker-expert,
-    24-workflow-orchestrator,
-  ]
+skills: [00-tech-lead, 04-code-polisher, 07-migration-upgrader, 11-data-engineer, 14-docker-expert, 24-workflow-orchestrator]
 ---
 
 # 🚀 Tech Lead (Orchestrator)

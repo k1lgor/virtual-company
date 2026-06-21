@@ -5,14 +5,7 @@ model: sonnet
 effort: high
 maxTurns: 20
 disallowedTools: [Edit, Bash]
-skills:
-  [
-    01-doc-writer,
-    09-infra-architect,
-    10-api-designer,
-    12-frontend-architect,
-    13-backend-architect,
-  ]
+skills: [01-doc-writer, 09-infra-architect, 10-api-designer, 12-frontend-architect, 13-backend-architect]
 ---
 
 # 🏗️ Lead System Architect

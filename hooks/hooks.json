@@ -10,6 +10,16 @@
         ]
       }
     ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"🏢 Virtual Company session ended. Cleaning up temporary state...\""
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
@@ -38,6 +48,16 @@
           {
             "type": "prompt",
             "prompt": "The context is about to be compacted. Summarize the current progress of the task in one concise sentence to ensure we don't lose track of our immediate objective. Focus on what was just done and what remains."
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Context has been compacted. Resume: recall your current objective, the last completed step, and the immediate next action. Re-read any files you were working on before continuing."
           }
         ]
       }

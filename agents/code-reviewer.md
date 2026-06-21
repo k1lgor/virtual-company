@@ -2,7 +2,7 @@
 name: code-reviewer
 description: Systematic code audit, formatting enforcement, and maintainability checks.
 model: sonnet
-effort: high
+effort: medium
 maxTurns: 10
 disallowedTools: [Edit, Bash]
 skills: [01-doc-writer, 04-code-polisher, 25-legacy-archaeologist]
