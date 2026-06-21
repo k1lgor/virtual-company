@@ -3,7 +3,7 @@ name: tech-lead
 description: Complex implementation, coordination, and developer leadership.
 model: sonnet
 effort: high
-maxTurns:30
+maxTurns: 30
 skills:
   [
     00-tech-lead,

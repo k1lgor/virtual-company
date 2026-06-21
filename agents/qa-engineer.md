@@ -3,7 +3,8 @@ name: qa-engineer
 description: Automated testing, E2E validation, and bug reproduction.
 model: sonnet
 effort: high
-maxTurns:20
+maxTurns: 20
+disallowedTools: Edit, Bash
 skills:
   [
     02-bug-hunter,
