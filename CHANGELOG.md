@@ -5,6 +5,29 @@ All notable changes to the Virtual Company plugin will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] — 2026-06-21
+
+### Fixed
+
+- `disallowedTools` corrected from bare YAML string to proper list format `[Edit, Bash]` in all 5 advisory agents — previously the string literal `Edit, Bash` was not parsed as a list
+- `tech-lead` agent now has explicit `disallowedTools: []` (was the only agent missing this field)
+- `qa-engineer` agent now allows `Bash` (required to run test suites); only `Edit` remains blocked
+- `validate-skill.sh` calls in `commands/skills.md` fixed — script expects a single file path, not a directory
+- `--category architecture` example in `commands/skills.md` corrected to valid category (`logic`)
+- PostToolUse lint hook now tries `npm`, `bun`, `yarn`, and `pnpm` (was `bun`-only)
+
+### Added
+
+- `SessionEnd` hook (teardown message on session end) and `PostCompact` hook (context-resume prompt after compaction) added to `hooks.json`
+- `PreToolUse` and `PreCompact` hooks documented in `CLAUDE.md` (were present in hooks.json but undocumented)
+- `commands/` directory added to `CLAUDE.md` Technical Architecture section
+
+### Changed
+
+- Agent frontmatter: `architect` skillset — replaced `00-tech-lead` with `01-doc-writer` (architect produces ADRs/docs, delegates to tech-lead)
+- Agent frontmatter: skills lists standardized to inline `[a, b, c]` format across all agents
+- `code-reviewer` effort tuned from `high` to `medium` (matches focused 10-turn audit role)
+
 ## [1.4.1] — 2026-06-21
 
 ### Added
@@ -111,6 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLAUDE.md with orchestration flow, decision trees, and failure modes
 - MIT License
 
+[1.4.2]: https://github.com/k1lgor/virtual-company/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/k1lgor/virtual-company/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/k1lgor/virtual-company/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/k1lgor/virtual-company/compare/v1.3.0...v1.3.1
