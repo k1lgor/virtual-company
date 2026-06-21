@@ -212,4 +212,119 @@ def handle_order():
 7. Alert fires correctly when SLO breached (tested)
 ```
 
+## 💡 Examples
+
+### Example 1: Adding Structured Logging to a Node.js Express App
+
+```javascript
+// Before: unstructured logging
+app.get('/api/orders/:id', (req, res) => {
+  console.log('Fetching order', req.params.id);
+  // ...
+});
+
+// After: structured JSON logging with correlation ID
+const { v4: uuidv4 } = require('uuid');
+
+app.use((req, res, next) => {
+  req.correlationId = req.headers['x-correlation-id'] || uuidv4();
+  res.setHeader('x-correlation-id', req.correlationId);
+  next();
+});
+
+app.get('/api/orders/:id', async (req, res) => {
+  const logger = createLogger({ correlationId: req.correlationId });
+  logger.info('Fetching order', { orderId: req.params.id });
+  try {
+    const order = await db.orders.findById(req.params.id);
+    logger.info('Order fetched', { orderId: order.id, status: order.status });
+    res.json(order);
+  } catch (err) {
+    logger.error('Failed to fetch order', { error: err.message, orderId: req.params.id });
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+```
+
+### Example 2: SLI Monitoring with Prometheus + Grafana
+
+```yaml
+# prometheus.yml — scrape config for 3 microservices
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['gateway:3000']
+
+  - job_name: 'order-service'
+    static_configs:
+      - targets: ['orders:3001']
+
+  - job_name: 'payment-service'
+    static_configs:
+      - targets: ['payments:3002']
+
+# Grafana dashboard panels:
+# - Availability: sum(rate(http_requests_total{status!~"5.."}[5m])) / sum(rate(http_requests_total[5m]))
+# - Latency (p99): histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))
+# - Error Rate: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m]))
+```
+
+### Example 3: Distributed Tracing Setup
+
+```python
+# FastAPI + OpenTelemetry — inject trace context across services
+from fastapi import FastAPI, Request
+from opentelemetry import trace
+from opentelemetry.propagate import extract
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
+app = FastAPI()
+
+@app.middleware("http")
+async def trace_middleware(request: Request, call_next):
+    ctx = extract(request.headers)
+    tracer = trace.get_tracer(__name__)
+    with tracer.start_as_current_span(f"{request.method} {request.url.path}", context=ctx) as span:
+        span.set_attribute("http.method", request.method)
+        span.set_attribute("http.url", str(request.url))
+        response = await call_next(request)
+        span.set_attribute("http.status_code", response.status_code)
+        return response
+
+FastAPIInstrumentor.instrument_app(app)
+```
+
+### Example 4: Alert Rule Configuration
+
+```yaml
+# prometheus-rules.yml
+groups:
+  - name: slo-alerts
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total[5m])) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Error rate exceeds SLO (threshold: 1%)"
+
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p99 latency exceeds 500ms"
+```
+
+---
+
 "No service goes to production without SLI-based alerting."
