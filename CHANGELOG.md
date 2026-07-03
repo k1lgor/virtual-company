@@ -5,6 +5,34 @@ All notable changes to the Virtual Company plugin will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] — 2026-07-02
+
+### Added
+
+- **Voice Directive**: writing style guidelines + banned AI-slop words (delve, crucial, robust, etc.) to enforce professional agent output quality
+- **Completion Status Protocol**: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT status framework with hard evidence gates — prevents vague "it's done" claims
+- **Confusion Protocol**: STOP-and-ask guardrail for high-stakes ambiguity (architecture decisions, data model changes, destructive scope) — agents no longer guess on critical decisions
+- **Proactive Skill Routing**: 28 intent-to-skill auto-dispatch mappings — users no longer need to memorize all 27 skill names; say "bug" → `bug-hunter`, "deploy" → `qa-engineer` + `code-reviewer`
+- **AskUserQuestion Decision Brief**: structured user question format with D<N> headers, ELI10 explanations, completeness scores, and forced recommendation — replaces ad-hoc agent questions
+- **AI Effort Compression Reference**: human-vs-AI time comparison table (100x boilerplate, 30x features, 5x architecture) to reframe build-vs-skip scope decisions
+- **Learning Log** (`scripts/log-learning.sh` + CLAUDE.md Operational Self-Improvement section): cross-session knowledge compounding — skills log durable project quirks, fixes, and patterns to `~/.virtual-company/projects/<slug>/learnings.jsonl`; loaded at session start
+- **Preamble Tier System** (T1-T4): `preamble-tier` field in all 27 SKILL.md frontmatters — controls which guardrail sections are active (T1=minimal documentation, T4=full security gates) to save tokens on simple skills while applying full discipline to critical ones
+- **Skill Template Pipeline** (`scripts/gen-skills.sh` + `skills/_templates/` directory): SKILL.md.tmpl master template with `{{PLACEHOLDER}}` tokens resolved by 6 reusable resolver components (voice, completion, confusion, ask-user-format, effort-table, learning-log) — edit one resolver file to propagate changes to ALL skills; bug-hunter has a working `.spec` proof of concept
+
+### Changed
+
+- CLAUDE.md expanded from 346 to ~530 lines with 8 new operational sections inspired by gstack v1.58 architecture patterns
+- All 27 SKILL.md files: `preamble-tier` field added to frontmatter (4x T1, 16x T2, 5x T3, 2x T4)
+- All internal references changed from `~/.gstack/` to `~/.virtual-company/` (learning log storage, script paths)
+- `validate-skill.sh`: now checks for `preamble-tier` field in SKILL.md files
+- `scripts/README.md`: documented `log-learning.sh` and `gen-skills.sh` scripts
+- `hooks.json`: welcome banner bumped to v1.5.0
+- `.claude-plugin/plugin.json`: v1.4.2 → v1.5.0, updated description with new features
+- New directories: `skills/_templates/` (master template + 6 resolvers)
+- New files: `skills/_templates/SKILL.md.tmpl`, 6 resolver `.md` files, `scripts/gen-skills.sh`, `scripts/log-learning.sh`
+- All 27 skills now have `SKILL.md.spec` source files generated from clean SKILL.md content + resolver placeholders
+- All 27 SKILL.md files regenerated via `gen-skills.sh --all` with Voice, Completion, Confusion, and Learning Log injected from resolvers (+68 lines per skill)
+
 ## [1.4.2] — 2026-06-21
 
 ### Fixed

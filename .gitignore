@@ -3,3 +3,7 @@
 .pi/
 .oh-my-pi/
 .pantheon/
+.omo/
+
+# Runtime state (learning logs, analytics — not source code)
+.virtual-company/

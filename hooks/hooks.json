@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"🏢 Virtual Company v1.4.1 Initialized. All Experts and Agents online.\""
+            "command": "echo \"🏢 Virtual Company v1.5.0 Initialized. All Experts and Agents online.\""
           }
         ]
       }

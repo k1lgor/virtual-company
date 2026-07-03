@@ -93,6 +93,61 @@ audit-deps.sh --severity high --fix
 verify-gate.sh --gate-name "secret-scan" --command "security-sentinel.sh src/" --log security-gates.tsv
 ```
 
+---
+
+### 6. `log-learning.sh` — Operational Learning Logger (v1.5.0)
+
+Logs durable project quirks, command fixes, and time-saving insights discovered during skill execution. Learnings compound across sessions.
+
+```bash
+./scripts/log-learning.sh --skill bug-hunter --type gotcha \
+    --key "jest-cache-stale" \
+    --insight "Jest --no-cache fixes 90% of 'test passes locally, fails in CI' issues."
+
+./scripts/log-learning.sh --skill backend-architect --type pattern \
+    --key "pg-pool-sizing" \
+    --insight "Postgres connection pool = (CPU cores * 2) + spindle count." \
+    --confidence 1.0
+```
+
+**Learning types:** `operational` (command fixes), `pattern` (reusable patterns), `fix` (solutions to recurring bugs), `gotcha` (library/doc surprises), `config` (project-specific conventions).
+
+**Output:** Appends JSONL to `~/.virtual-company/projects/<project-slug>/learnings.jsonl`. Project slug is auto-detected from git repo or directory name.
+
+**Exit:** 0 on success, 1 on invalid args.
+
+---
+
+### 7. `gen-skills.sh` — Template Pipeline Generator (v1.5.0)
+
+Composes SKILL.md files from `.spec` templates + resolver components. Edit resolver files to propagate changes to ALL skills, or edit per-skill `.spec` files for skill-specific content.
+
+```bash
+# Generate a single skill from its .spec file
+./scripts/gen-skills.sh --skill skills/02-bug-hunter
+
+# Regenerate all skills (requires .spec files)
+./scripts/gen-skills.sh --all
+
+# List template status for all skills
+./scripts/gen-skills.sh --list
+
+# Validate all .spec files for completeness
+./scripts/gen-skills.sh --validate
+```
+
+**Architecture:**
+- `skills/_templates/SKILL.md.tmpl` — Master template with `{{PLACEHOLDERS}}`
+- `skills/_templates/resolvers/*.md` — Reusable section components (voice, completion, confusion, ask-user-format, effort-table, learning-log)
+- `skills/XX-skill/SKILL.md.spec` — Per-skill specification with skill-specific content + `{{PLACEHOLDER}}` tokens
+- `skills/XX-skill/SKILL.md` — Generated output (safe to hand-edit, but re-running `gen-skills.sh` overwrites it)
+
+**When to use .spec files:**
+- Creating a NEW skill → write `SKILL.md.spec` with domain content + `{{VOICE}}`, `{{COMPLETION}}`, etc. at the end
+- Editing common patterns → edit the resolver file, then run `gen-skills.sh --all`
+
+---
+
 ## Script Standards
 
 All scripts follow these conventions:

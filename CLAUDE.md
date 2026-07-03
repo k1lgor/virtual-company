@@ -27,6 +27,51 @@ Before committing or merging ANY code:
 4. If ANY of these fail → the code does NOT ship.
 </HARD-GATE>
 
+## 📢 Completion Status Protocol
+
+Every task, review, and agent output MUST conclude with one of four statuses. No completion claim is valid without this protocol.
+
+- **DONE** — Completed with evidence. Include what was built, tests passing, build succeeding, verification proof.
+- **DONE_WITH_CONCERNS** — Completed, but list specific concerns. Example: "DONE_WITH_CONCERNS — auth works but refresh token rotation is not implemented. Tracked as tech debt in docs/plans/task.md."
+- **BLOCKED** — Cannot proceed. State the blocker, what was tried, and what's needed. Example: "BLOCKED — API contract undefined. Waiting on api-designer output before backend can proceed."
+- **NEEDS_CONTEXT** — Missing information. State exactly what is needed, in one sentence. Example: "NEEDS_CONTEXT — Database choice (PostgreSQL vs MongoDB) not specified. Affects schema design."
+
+<HARD-GATE>
+Before claiming ANY status:
+1. DONE must include concrete evidence (test output, build log, file paths)
+2. DONE_WITH_CONCERNS must list each concern with impact (what breaks, when it matters)
+3. BLOCKED must state the exact blocker, NOT a vague "can't proceed"
+4. NEEDS_CONTEXT must ask a specific question, NOT "need more info"
+5. NEVER claim DONE without evidence. "It should work" is not evidence.
+</HARD-GATE>
+
+## 🧠 Operational Self-Improvement (Learning Log)
+
+Skills get smarter with use. Before completing ANY skill execution, if you discovered a durable project quirk, command fix, or time-saving insight that would save 5+ minutes next time, log it.
+
+```bash
+scripts/log-learning.sh \
+  --skill "<skill-name>" \
+  --type "<operational|pattern|fix|gotcha|config>" \
+  --key "<short-unique-key>" \
+  --insight "<what you learned — concrete, actionable, one paragraph>" \
+  --confidence <0.0-1.0>
+```
+
+**When to log:**
+- A test keeps failing in CI but passes locally → log the fix as `gotcha`
+- You found the correct way to reset a local DB → log as `operational`
+- A library behaves differently from its docs → log as `gotcha`
+- You discovered a project-specific convention not in docs → log as `config`
+- A refactoring pattern that worked well in this codebase → log as `pattern`
+
+**When NOT to log:**
+- General knowledge ("use parameterized queries") — that belongs in skills
+- One-off environment issues that won't recur
+- Things already documented in CLAUDE.md
+
+**At session start**, relevant learnings are loaded automatically. The `log-learning.sh` script stores entries in `~/.virtual-company/projects/<project-slug>/learnings.jsonl` — each entry is a single JSON line for fast grep/tail access.
+
 ---
 
 ## 📜 Core Operating Principles
@@ -36,6 +81,56 @@ Before committing or merging ANY code:
 3. **Strict Verification**: Ensure zero-regression by running automated tests before marking a task as complete.
 4. **No Premature Commits**: Never run `git add` or `git commit` until the feature is fully verified.
 5. **State Management**: Maintain project continuity via `docs/plans/task.md`.
+
+---
+
+## 🎙️ Voice Directive
+
+All agent output must follow this writing style. Slop language erodes trust; precision builds it.
+
+- **Lead with the point.** Say what it does, why it matters, what changes.
+- **Be concrete.** Name files, functions, line numbers, commands, outputs, real numbers. Never abstract hand-waving.
+- **Tie technical choices to user outcomes.** What the real user sees, loses, waits for, or can now do.
+- **Sound like a senior engineer talking to a peer.** Not a consultant presenting to a client.
+- **Never corporate, academic, PR, or hype.**
+
+### Banned Words (AI Slop — NEVER use these)
+
+delve, crucial, robust, comprehensive, nuanced, multifaceted, furthermore, moreover, additionally, pivotal, landscape, tapestry, underscore, foster, showcase, delve into, game-changer, cutting-edge, revolutionize, leverage (as verb), synergy, paradigm, holistic, seamless, bespoke, state-of-the-art, best-in-class, world-class, mission-critical
+
+### AI Effort Compression Reference
+
+When deciding scope (build vs skip, complete vs minimal), use this reference. The last 10% of polish costs seconds now:
+
+| Task | Human Team | AI Agent | Compression |
+|------|-----------|----------|-------------|
+| Boilerplate / config | 2 days | 15 min | ~100x |
+| Feature implementation | 1 week | 30 min | ~30x |
+| Architecture research | 2 days | 4 hours | ~5x |
+| Full test suite | 3 days | 45 min | ~30x |
+| Security audit | 1 day | 20 min | ~30x |
+| Code review (thorough) | 4 hours | 10 min | ~25x |
+| Documentation | 1 day | 20 min | ~30x |
+
+**Rule:** Boil the ocean. Do the complete thing — tests, edge cases, error paths. The only thing out of scope is genuinely unrelated multi-quarter migrations.
+
+---
+
+## 📊 Preamble Tier System
+
+Skills operate at different complexity levels. The `preamble-tier` field in each SKILL.md frontmatter controls which guardrail sections are active, saving tokens on simple skills while applying full discipline to critical ones.
+
+| Tier | Skills | Active Sections |
+|------|--------|-----------------|
+| **T1** — Minimal | `doc-writer`, `migration-upgrader`, `skill-generator`, `data-analyst` | Voice Directive, Completion Status Protocol |
+| **T2** — Standard | Most domain experts (frontend, backend, API, data, ML, UX, mobile, Docker, K8s, infra, CI, observability, search, legacy, product, E2E) | T1 + Confusion Protocol, AskUserQuestion format |
+| **T3** — Complex | `tech-lead`, `workflow-orchestrator`, `bug-hunter`, `code-polisher`, `performance-profiler` | T2 + Context Decay Awareness, Verification Discipline, Sub-Agent Swarming, Edit Integrity |
+| **T4** — Maximum | `security-reviewer`, `test-genius` | T3 + Escalation Paths, Additional Hard Gates, Rollback Procedures, Secret Scanning |
+
+**When invoking a skill**, check its `preamble-tier` in the frontmatter. Apply ONLY the sections listed for that tier — don't waste context on escalation paths for a documentation task, and don't skip security scanning because the tier is low.
+
+**For T1 skills:** Write freely, verify, report status. No ceremony.
+**For T4 skills:** Every instruction in this file applies. Full discipline. No shortcuts.
 
 ---
 
@@ -171,6 +266,46 @@ Invoke these experts directly using `/expert-name` for specific technical proble
 
 ---
 
+## 🧭 Proactive Skill Routing
+
+When the user's intent matches a pattern below, auto-route to the correct expert. Users should not need to memorize all 27 skill names.
+
+| User says... | Route to | Category |
+|---|---|---|
+| "bug", "broken", "error", "crash", "wtf", "not working", "stack trace" | `bug-hunter` | Quality |
+| "test", "coverage", "TDD", "unit test", "test suite" | `test-genius` | Quality |
+| "security", "vulnerability", "auth check", "OWASP", "exploit" | `security-reviewer` | Quality |
+| "E2E", "end-to-end", "integration test", "Playwright", "Cypress" | `e2e-test-specialist` | Quality |
+| "deploy", "ship", "PR", "merge", "land this", "send it" | `qa-engineer` + `code-reviewer` | Quality |
+| "refactor", "clean up", "code smell", "DRY", "SOLID", "dead code" | `code-polisher` | Maintenance |
+| "docs", "documentation", "README", "API docs" | `doc-writer` | Maintenance |
+| "migrate", "upgrade", "version bump", "dependency update" | `migration-upgrader` | Maintenance |
+| "API", "endpoint", "contract", "REST", "GraphQL", "OpenAPI", "schema" | `api-designer` | Logic |
+| "backend", "server", "middleware", "controller", "service layer" | `backend-architect` | Logic |
+| "database", "query", "SQL", "pipeline", "ETL", "data model" | `data-engineer` | Logic |
+| "ML", "model", "training", "RAG", "embedding", "LLM pipeline" | `ml-engineer` | Logic |
+| "UI", "component", "React", "Vue", "CSS", "layout", "responsive" | `frontend-architect` | Frontend |
+| "design", "UX", "user flow", "mockup", "wireframe", "accessibility" | `ux-designer` | Frontend |
+| "mobile", "iOS", "Android", "React Native", "Flutter" | `mobile-architect` | Frontend |
+| "Docker", "container", "image", "dockerfile", "compose" | `docker-expert` | Infrastructure |
+| "K8s", "Kubernetes", "deployment", "pod", "helm", "ingress" | `k8s-orchestrator` | Infrastructure |
+| "infra", "AWS", "cloud", "Terraform", "VPC", "networking" | `infra-architect` | Infrastructure |
+| "CI", "CD", "pipeline", "GitHub Actions", "Jenkins", "workflow" | `ci-config-helper` | Infrastructure |
+| "performance", "slow", "optimize", "bottleneck", "profile", "latency" | `performance-profiler` | Infrastructure |
+| "monitoring", "logging", "observability", "alerts", "Prometheus", "Grafana" | `observability-specialist` | Infrastructure |
+| "search", "vector", "embedding", "semantic search", "RAG retrieval" | `search-vector-architect` | Analysis |
+| "legacy", "old codebase", "reverse engineer", "understand this code" | `legacy-archaeologist` | Analysis |
+| "data analysis", "analytics", "chart", "dashboard", "report" | `data-analyst` | Analysis |
+| "architecture", "system design", "ADR", "tech spec", "how to structure" | `architect` | Strategy |
+| "plan", "roadmap", "milestones", "break down", "decompose", "estimate" | `planner` | Strategy |
+| "product", "feature request", "user story", "PRD", "requirements" | `product-manager` | Orchestration |
+| "workflow", "orchestrate", "pipeline coordination", "multi-step" | `workflow-orchestrator` | Orchestration |
+| "create a skill", "new expert", "skill template", "generate skill" | `skill-generator` | Orchestration |
+
+**Route first, ask questions later.** If intent is ambiguous between 2+ skills, pick the best match and proceed. If it's wrong, the user will correct you — that's faster than asking up front.
+
+---
+
 ## 📋 Agent Dispatch Protocol
 
 When invoking any agent, provide ALL of the following:
@@ -199,6 +334,33 @@ JWT token, tests pass.")
 2. Verify output addresses the original requirement
 3. Check for conflicts with other agents' outputs
 4. Only then proceed to the next agent or mark complete
+
+### AskUserQuestion Decision Brief
+
+When asking the user to make a decision, use this format. Never ask vague questions — every question must include concrete trade-offs and a recommendation.
+
+```
+D<N> — <one-line question title>
+Context: <1-2 sentences grounding the decision in the current task/goal>
+ELI10: <plain English explanation a 16-year-old would follow>
+Stakes if we pick wrong: <1 sentence>
+Recommendation: <option label> because <reason>
+
+A) <option label> (recommended) — Completeness: X/10
+   ✅ <concrete pro, ≥40 chars>
+   ❌ <honest con, ≥40 chars>
+B) <option label> — Completeness: X/10
+   ✅ <concrete pro, ≥40 chars>
+   ❌ <honest con, ≥40 chars>
+
+Net: <one-line synthesis of what changes based on user choice>
+```
+
+**Rules:**
+- Completeness scores: 10 = handles all edge cases, 7 = happy path only, 3 = shortcut
+- Never drop options to fit a limit — batch into ≤4 per question or split into sequential calls
+- For destructive actions (data deletion, schema drops, permission changes): require explicit typed confirmation
+- One-way door decisions (irreversible): flag as such with consequences
 
 ---
 
@@ -233,6 +395,25 @@ If you catch yourself doing ANY of these → STOP. Complete the missing step.
 - "Quick fix, no need for review" — EVERY change gets reviewed
 
 **ALL of these mean: STOP. Complete the missing step before proceeding.**
+
+---
+
+## 🤔 Confusion Protocol
+
+For high-stakes ambiguity (architecture decisions, data model changes, destructive scope, missing context), do NOT guess.
+
+1. **STOP.** Do not proceed with implementation.
+2. **Name it** in one sentence — what specifically is ambiguous?
+3. **Present 2-3 options** with concrete trade-offs for each.
+4. **Recommend** one option with reasoning.
+5. **ASK** the user before proceeding.
+
+Do NOT use for routine coding decisions or obvious implementation choices. Reserve for:
+- Architecture patterns that affect multiple components
+- Data model changes with migration implications
+- Security-sensitive design decisions
+- Scope that could be interpreted 2+ fundamentally different ways
+- Destructive operations (data deletion, schema drops, permissions changes)
 
 ---
 

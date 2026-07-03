@@ -94,6 +94,9 @@ check_section "Verification"     "verification" "verification-checklist" "verifi
 check_section "Decision Tree"    "decision tree" "mermaid" "flowchart" "decision-tree"
 check_section "Collaborative Links" "collaborative links" "collaborative-links" "collaborative_links"
 
+# --- Modern section checks (v1.5.0+) ---
+check_section "Preamble Tier"    "preamble-tier" "preamble_tier"
+
 # --- Placeholder check (1 point) ---
 PLACEHOLDER_FOUND=0
 PLACEHOLDER_PATTERN="TODO\|TBD\|FIXME\|implement later\|add appropriate"
