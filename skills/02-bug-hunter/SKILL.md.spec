@@ -5,7 +5,7 @@ description: Use when encountering any bug, test failure, crash, unexpected beha
 persona: Senior Site Reliability Engineer (SRE) and Debugging Specialist.
 capabilities:
   [root_cause_analysis, stack_trace_parsing, regression_testing, bug_fixing]
-allowed-tools: [Grep, Read, Glob, Bash, Agent]
+allowed-tools: [Grep, Read, Glob, Bash, Edit, Agent]
 ---
 
 # 🕵️ Debugging Specialist / Bug Hunter
@@ -289,10 +289,4 @@ test("rejects non-numeric age", async () => {
 
 **Fix:** Add server-side type validation or cast in the handler.
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

@@ -232,7 +232,7 @@ Dispatch template:
 - After 2 failed re-dispatches → log BLOCKED, notify human, continue other work
 - Never wait indefinitely — always have a fallback plan
 
-## 🚨 Failure Modes
+## 💡 Dispatch Patterns
 
 ### Parallel Dispatch Pattern
 
@@ -322,10 +322,4 @@ Gates: security-reviewer audits file upload (Phase 2) | qa-engineer runs E2E (Ph
 
 **Dispatch order:** architect (Phase 1) → backend-architect (Phase 2) → frontend-architect + security-reviewer (parallel Phase 3) → qa-engineer (final).
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

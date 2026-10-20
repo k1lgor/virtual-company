@@ -228,10 +228,4 @@ print(f"Average: ${monthly['amount'].mean():,.0f}")
 print(f"Recommendation: Investigate what drove {peak['date']} peak")
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

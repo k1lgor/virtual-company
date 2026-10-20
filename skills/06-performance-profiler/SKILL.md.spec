@@ -266,10 +266,4 @@ function SearchResults({ items }) {
 const MemoizedItem = React.memo(Item);
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

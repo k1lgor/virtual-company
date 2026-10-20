@@ -322,24 +322,6 @@ Before claiming ANY status:
 4. NEEDS_CONTEXT must ask a specific question, NOT "need more info"
 5. NEVER claim DONE without evidence. "It should work" is not evidence.
 </HARD-GATE>
-
-## 🤔 Confusion Protocol
-
-For high-stakes ambiguity (architecture decisions, data model changes, destructive scope, missing context), do NOT guess.
-
-1. **STOP.** Do not proceed with implementation.
-2. **Name it** in one sentence — what specifically is ambiguous?
-3. **Present 2-3 options** with concrete trade-offs for each.
-4. **Recommend** one option with reasoning.
-5. **ASK** the user before proceeding.
-
-Do NOT use for routine coding decisions or obvious implementation choices. Reserve for:
-- Architecture patterns that affect multiple components
-- Data model changes with migration implications
-- Security-sensitive design decisions
-- Scope that could be interpreted 2+ fundamentally different ways
-- Destructive operations (data deletion, schema drops, permissions changes)
-
 ## 🧠 Operational Self-Improvement (Learning Log)
 
 Skills get smarter with use. Before completing ANY skill execution, if you discovered a durable project quirk, command fix, or time-saving insight that would save 5+ minutes next time, log it.
@@ -358,3 +340,95 @@ scripts/log-learning.sh \
 **When NOT to log:** general knowledge, one-off env issues, things already in CLAUDE.md.
 
 **Learnings stored in** `~/.virtual-company/projects/<project-slug>/learnings.jsonl` — loaded at session start.
+## 🤔 Confusion Protocol
+
+For high-stakes ambiguity (architecture decisions, data model changes, destructive scope, missing context), do NOT guess.
+
+1. **STOP.** Do not proceed with implementation.
+2. **Name it** in one sentence — what specifically is ambiguous?
+3. **Present 2-3 options** with concrete trade-offs for each.
+4. **Recommend** one option with reasoning.
+5. **ASK** the user before proceeding.
+
+Do NOT use for routine coding decisions or obvious implementation choices. Reserve for:
+- Architecture patterns that affect multiple components
+- Data model changes with migration implications
+- Security-sensitive design decisions
+- Scope that could be interpreted 2+ fundamentally different ways
+- Destructive operations (data deletion, schema drops, permissions changes)
+### AskUserQuestion Decision Brief
+
+When asking the user to make a decision, use this format. Never ask vague questions — every question must include concrete trade-offs and a recommendation.
+
+```
+D<N> — <one-line question title>
+Context: <1-2 sentences grounding the decision in the current task/goal>
+ELI10: <plain English explanation a 16-year-old would follow>
+Stakes if we pick wrong: <1 sentence>
+Recommendation: <option label> because <reason>
+
+A) <option label> (recommended) — Completeness: X/10
+   ✅ <concrete pro, ≥40 chars>
+   ❌ <honest con, ≥40 chars>
+B) <option label> — Completeness: X/10
+   ✅ <concrete pro, ≥40 chars>
+   ❌ <honest con, ≥40 chars>
+
+Net: <one-line synthesis of what changes based on user choice>
+```
+
+**Rules:**
+- Completeness scores: 10 = handles all edge cases, 7 = happy path only, 3 = shortcut
+- Never drop options to fit a limit — batch into ≤4 per question or split into sequential calls
+- For destructive actions (data deletion, schema drops, permission changes): require explicit typed confirmation
+- One-way door decisions (irreversible): flag as such with consequences
+## 🧠 Context Decay Awareness
+
+After 10+ messages in a session your memory of file contents is unreliable — auto-compaction may have silently destroyed it.
+
+- Re-read any file immediately before editing it. Never edit against a mental model from an earlier read.
+- Re-read the original requirement before claiming the task complete.
+- If a tool result looks suspiciously small, assume truncation and re-run with narrower scope.
+
+## 🐝 Sub-Agent Swarming (>5 independent files)
+
+Sequential processing of large tasks guarantees context decay — one context window cannot hold 6+ files plus the reasoning about them.
+
+- Tasks touching >5 independent files → dispatch parallel sub-agents, 5-8 files each.
+- Give each sub-agent a self-contained brief: goal, known context, expected output format.
+- Completion is push-based — do not poll in a loop.
+- Never delegate the understanding ("based on your findings, fix it"). Hand over the question, or the exact change with file and line numbers.
+
+## ✏️ Edit Integrity
+
+- Re-read the file immediately before every edit.
+- Re-read it after the edit to confirm the change applied.
+- The Edit tool fails silently when `old_string` does not match. A failed match is a stale-context signal, not a tool bug — re-read and retry.
+- Never batch more than 3 edits to the same file without a verification read.
+
+## ✅ Verification Discipline
+
+Before claiming any work is complete, produce evidence:
+
+1. Re-read the original requirement verbatim.
+2. List the expected deliverables.
+3. Verify each one with a fresh command — run the tests, the build, the typecheck now, not "it passed earlier".
+4. Only then claim completion, and quote the evidence.
+
+"No completion claims without fresh verification evidence."
+
+### AI Effort Compression Reference
+
+When deciding scope (build vs skip, complete vs minimal), use this reference. The last 10% of polish costs seconds now:
+
+| Task | Human Team | AI Agent | Compression |
+|------|-----------|----------|-------------|
+| Boilerplate / config | 2 days | 15 min | ~100x |
+| Feature implementation | 1 week | 30 min | ~30x |
+| Architecture research | 2 days | 4 hours | ~5x |
+| Full test suite | 3 days | 45 min | ~30x |
+| Security audit | 1 day | 20 min | ~30x |
+| Code review (thorough) | 4 hours | 10 min | ~25x |
+| Documentation | 1 day | 20 min | ~30x |
+
+**Rule:** Boil the ocean. Do the complete thing — tests, edge cases, error paths. The only thing out of scope is genuinely unrelated multi-quarter migrations.

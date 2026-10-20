@@ -92,8 +92,8 @@ virtual-company/
 ├── agents/             # 6 Native Role Agents
 ├── commands/           # Slash Commands (skills listing, etc.)
 ├── hooks/              # Automated Lifecycle Hooks
-├── scripts/            # 5 Verification & Quality Scripts
-├── skills/             # 27 Specialized Domain Expert Skills
+├── scripts/            # 8 Verification & Quality Scripts
+├── skills/             # 27 Domain Expert Skills (+ _templates/resolvers)
 └── .claude-plugin/     # Plugin & Marketplace Manifests
 ```
 

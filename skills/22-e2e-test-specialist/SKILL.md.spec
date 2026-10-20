@@ -270,10 +270,4 @@ describe("Checkout", () => {
 });
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

@@ -227,10 +227,4 @@ export const Card = ({ title, children, className }) => (
 }
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

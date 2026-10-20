@@ -1,6 +1,6 @@
 ---
 name: migration-upgrader
-preamble-tier: 1
+preamble-tier: 2
 description: Use when performing version upgrades, framework migrations, library replacements, or API deprecation handling — with rollback planning and risk assessment
 persona: Senior Software Migration Engineer and Lifecycle Specialist.
 capabilities:
@@ -228,10 +228,4 @@ grep -rn "encode\|decode\|bytes\|unicode" --include="*.py" .
 python -m pytest
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

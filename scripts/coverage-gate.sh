@@ -81,8 +81,25 @@ echo -e "${BOLD}Threshold:${NC} ${THRESHOLD}%"
 echo -e "${BOLD}Command:${NC} $COMMAND"
 echo ""
 
-OUTPUT=$(eval "$COMMAND" 2>&1) || true
+# Capture the test command's real exit status. `|| true` made `$?` always 0,
+# which hid failing test suites from the gate.
+set +e
+OUTPUT=$(eval "$COMMAND" 2>&1)
 EXIT_CODE=$?
+set -e
+
+# A failing test run makes the coverage number meaningless — fail before parsing.
+if [[ $EXIT_CODE -ne 0 ]]; then
+    echo "$OUTPUT" | tail -20
+    echo ""
+    if [[ "$REPORTER" == "json" ]]; then
+        printf '{"passed":false,"actual":null,"threshold":%d,"command":"%s","exit_code":%d}\n' \
+            "$THRESHOLD" "$COMMAND" "$EXIT_CODE"
+    else
+        echo -e "${RED}FAIL${NC} — test command exited ${EXIT_CODE}; coverage not evaluated"
+    fi
+    exit 1
+fi
 
 # --- Parse coverage percentage ---
 # Try multiple common formats
@@ -113,8 +130,9 @@ if [[ -z "$ACTUAL" ]]; then
 fi
 
 # --- Compare against threshold ---
-# Use bc for float comparison
-PASSED=$(echo "$ACTUAL >= $THRESHOLD" | bc 2>/dev/null || echo "0")
+# awk does the float comparison: `bc` is not installed by default on Git Bash,
+# Windows, or minimal CI images, and without it this gate always failed.
+PASSED=$(awk -v a="$ACTUAL" -v t="$THRESHOLD" 'BEGIN { exit !((a + 0) >= (t + 0)) }' && echo 1 || echo 0)
 
 # --- Output ---
 if [[ "$REPORTER" == "json" ]]; then

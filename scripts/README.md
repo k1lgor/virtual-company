@@ -118,9 +118,9 @@ Logs durable project quirks, command fixes, and time-saving insights discovered 
 
 ---
 
-### 7. `gen-skills.sh` — Template Pipeline Generator (v1.5.0)
+### 7. `gen-skills.sh` — Template Pipeline Generator (v1.6.0)
 
-Composes SKILL.md files from `.spec` templates + resolver components. Edit resolver files to propagate changes to ALL skills, or edit per-skill `.spec` files for skill-specific content.
+Composes SKILL.md files from `.spec` files + tier-selected resolver components. Edit a resolver to propagate that guardrail to every tier that includes it.
 
 ```bash
 # Generate a single skill from its .spec file
@@ -129,22 +129,37 @@ Composes SKILL.md files from `.spec` templates + resolver components. Edit resol
 # Regenerate all skills (requires .spec files)
 ./scripts/gen-skills.sh --all
 
-# List template status for all skills
+# List tier + template status for all skills
 ./scripts/gen-skills.sh --list
 
-# Validate all .spec files for completeness
+# Validate all .spec files (sections, tier, {{GUARDRAILS}} marker)
 ./scripts/gen-skills.sh --validate
 ```
 
 **Architecture:**
-- `skills/_templates/SKILL.md.tmpl` — Master template with `{{PLACEHOLDERS}}`
-- `skills/_templates/resolvers/*.md` — Reusable section components (voice, completion, confusion, ask-user-format, effort-table, learning-log)
-- `skills/XX-skill/SKILL.md.spec` — Per-skill specification with skill-specific content + `{{PLACEHOLDER}}` tokens
-- `skills/XX-skill/SKILL.md` — Generated output (safe to hand-edit, but re-running `gen-skills.sh` overwrites it)
+- `skills/_templates/resolvers/*.md` — Reusable guardrail components (13: voice, completion, learning-log, confusion, ask-user-format, context-decay, sub-agent-swarming, edit-integrity, verification-discipline, effort-table, escalation, rollback, secret-scan)
+- `skills/XX-skill/SKILL.md.spec` — Per-skill source of truth, ending with a single `{{GUARDRAILS}}` marker
+- `skills/XX-skill/SKILL.md` — Generated output (do not hand-edit; re-running `gen-skills.sh` overwrites it)
 
-**When to use .spec files:**
-- Creating a NEW skill → write `SKILL.md.spec` with domain content + `{{VOICE}}`, `{{COMPLETION}}`, etc. at the end
-- Editing common patterns → edit the resolver file, then run `gen-skills.sh --all`
+**Tier composition** — the spec's `preamble-tier` selects which resolvers land in `{{GUARDRAILS}}`:
+
+| Tier | Guardrails injected |
+|------|---------------------|
+| T1 | voice, completion, learning-log |
+| T2 | + confusion, ask-user-format |
+| T3 | + context-decay, sub-agent-swarming, edit-integrity, verification-discipline, effort-table |
+| T4 | + escalation, rollback, secret-scan |
+
+A resolver is skipped when the skill already covers it in its own words, so hand-written sections are never duplicated.
+
+### 8. `load-learnings.sh` — Session-Start Learning Loader (v1.6.0)
+
+Prints the most recent entries from `~/.virtual-company/projects/<slug>/learnings.jsonl`. Wired into the `SessionStart` hook so learnings logged by `log-learning.sh` actually reach the agent.
+
+```bash
+./scripts/load-learnings.sh            # last 5 entries
+./scripts/load-learnings.sh --lines 10
+```
 
 ---
 

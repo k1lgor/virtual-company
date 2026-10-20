@@ -1,97 +1,136 @@
 #!/usr/bin/env bash
-# gen-skills.sh — Skill Template Generator
-# Composes a SKILL.md from a .tmpl file + resolver components.
-# This is the template pipeline inspired by gstack v1.58 architecture.
+# gen-skills.sh — Skill Template Generator (v1.6.0)
+# Composes a SKILL.md from a per-skill spec plus reusable resolver components.
 #
 # Usage:
 #   gen-skills.sh --skill <skill-dir>     # Generate single skill
 #   gen-skills.sh --all                   # Regenerate ALL skills
-#   gen-skills.sh --list                  # List all skills with their templates
+#   gen-skills.sh --list                  # List all skills with their tiers
+#   gen-skills.sh --validate              # Check specs and placeholder hygiene
 #
 # Architecture:
-#   skills/_templates/SKILL.md.tmpl       ← Master template ({{PLACEHOLDERS}})
-#   skills/_templates/resolvers/*.md      ← Reusable section components
-#   skills/XX-skill/SKILL.md.spec         ← Per-skill spec (YAML frontmatter + custom content)
-#   skills/XX-skill/SKILL.md              ← Generated output
+#   skills/_templates/resolvers/*.md      ← Reusable guardrail components
+#   skills/XX-skill/SKILL.md.spec         ← Per-skill source of truth
+#   skills/XX-skill/SKILL.md              ← Generated output (overwritten)
 #
-# Generated SKILL.md files are safe to edit directly, but re-running
-# gen-skills.sh overwrites them. For persistent changes, edit the .spec
-# or resolver files instead.
+# The spec is the single source of truth. The `preamble-tier` field in its
+# frontmatter decides WHICH guardrails are injected via {{GUARDRAILS}}:
+#
+#   T1  voice, completion, learning-log
+#   T2  T1 + confusion, ask-user-format
+#   T3  T2 + context-decay, sub-agent-swarming, edit-integrity,
+#            verification-discipline, effort-table
+#   T4  T3 + escalation, rollback, secret-scan
+#
+# A guardrail is skipped when the skill already covers it in its own words
+# (e.g. a skill with a hand-written "Edit Integrity" section does not get the
+# generic one injected twice).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 TEMPLATES_DIR="${PROJECT_DIR}/skills/_templates"
 RESOLVERS_DIR="${TEMPLATES_DIR}/resolvers"
-MASTER_TMPL="${TEMPLATES_DIR}/SKILL.md.tmpl"
 
 # --- Help ---
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" || $# -eq 0 ]]; then
     cat <<EOF
-gen-skills.sh — Skill Template Generator (v1.5.0)
+gen-skills.sh — Skill Template Generator (v1.6.0)
 
-Composes SKILL.md files from .tmpl templates + resolver components.
-Edit resolver files to propagate changes to ALL skills, or edit
-per-skill .spec files for skill-specific content.
+Composes SKILL.md files from per-skill .spec files + tier-selected resolvers.
+Edit a resolver to propagate that guardrail to every tier that includes it.
 
 USAGE:
     gen-skills.sh --skill <skill-dir>     Generate a single skill
-    gen-skills.sh --all                   Regenerate all 27 skills
-    gen-skills.sh --list                  Show template status for all skills
-    gen-skills.sh --validate              Check all .spec files for completeness
+    gen-skills.sh --all                   Regenerate all skills
+    gen-skills.sh --list                  Show tier + template status per skill
+    gen-skills.sh --validate              Check specs and placeholder hygiene
+
+TIER COMPOSITION (from the spec's preamble-tier):
+    T1  voice, completion, learning-log
+    T2  + confusion, ask-user-format
+    T3  + context-decay, sub-agent-swarming, edit-integrity,
+        verification-discipline, effort-table
+    T4  + escalation, rollback, secret-scan
 
 ARCHITECTURE:
-    skills/_templates/SKILL.md.tmpl       Master template with {{PLACEHOLDERS}}
-    skills/_templates/resolvers/          Reusable section components:
-        voice.md          — Voice Directive (writing style + banned words)
-        completion.md     — Completion Status Protocol (DONE/BLOCKED/...)
-        confusion.md      — Confusion Protocol (STOP-and-ask guardrail)
-        ask-user-format.md — AskUserQuestion Decision Brief format
-        effort-table.md   — AI Effort Compression Reference
-        learning-log.md   — Operational Self-Improvement (learning log)
-    skills/XX-skill/SKILL.md.spec         Per-skill specification
-    skills/XX-skill/SKILL.md              Generated output (overwritten by gen-skills.sh)
+    skills/_templates/resolvers/          Reusable guardrail components
+    skills/XX-skill/SKILL.md.spec         Per-skill source of truth
+    skills/XX-skill/SKILL.md              Generated output (do not edit)
 
 EXAMPLE:
-    # Generate a single skill
     gen-skills.sh --skill skills/02-bug-hunter
-
-    # Regenerate all skills after editing a resolver
     gen-skills.sh --all
-
-    # See which skills have .spec files
-    gen-skills.sh --list
 EOF
     exit 0
 fi
 
-# --- Resolve a placeholder ---
-resolve() {
-    local placeholder="$1"
-    case "$placeholder" in
-        "{{VOICE}}")
-            cat "${RESOLVERS_DIR}/voice.md" 2>/dev/null || true
-            ;;
-        "{{COMPLETION}}")
-            cat "${RESOLVERS_DIR}/completion.md" 2>/dev/null || true
-            ;;
-        "{{CONFUSION}}")
-            cat "${RESOLVERS_DIR}/confusion.md" 2>/dev/null || true
-            ;;
-        "{{ASK_USER_FORMAT}}")
-            cat "${RESOLVERS_DIR}/ask-user-format.md" 2>/dev/null || true
-            ;;
-        "{{EFFORT_TABLE}}")
-            cat "${RESOLVERS_DIR}/effort-table.md" 2>/dev/null || true
-            ;;
-        "{{LEARNING_LOG}}")
-            cat "${RESOLVERS_DIR}/learning-log.md" 2>/dev/null || true
-            ;;
-        *)
-            # Unknown placeholder — leave as-is
-            echo "$placeholder"
-            ;;
+# --- Tier → guardrail composition (single source of truth) ---
+guardrails_for_tier() {
+    case "${1:-2}" in
+        1) echo "voice completion learning-log" ;;
+        2) echo "voice completion learning-log confusion ask-user-format" ;;
+        3) echo "voice completion learning-log confusion ask-user-format context-decay sub-agent-swarming edit-integrity verification-discipline effort-table" ;;
+        4) echo "voice completion learning-log confusion ask-user-format context-decay sub-agent-swarming edit-integrity verification-discipline effort-table escalation rollback secret-scan" ;;
+        *) echo "voice completion learning-log confusion ask-user-format" ;;
     esac
+}
+
+# --- Marker used to detect that a skill already covers a guardrail ---
+resolver_marker() {
+    case "$1" in
+        voice)                   echo "Voice Directive" ;;
+        completion)              echo "Completion Status Protocol" ;;
+        confusion)               echo "Confusion Protocol" ;;
+        ask-user-format)         echo "AskUserQuestion" ;;
+        effort-table)            echo "Effort Compression" ;;
+        learning-log)            echo "Operational Self-Improvement" ;;
+        context-decay)           echo "Context Decay" ;;
+        sub-agent-swarming)      echo "Sub-Agent Swarm" ;;
+        edit-integrity)          echo "Edit Integrity" ;;
+        verification-discipline) echo "Verification Discipline" ;;
+        escalation)              echo "Escalation" ;;
+        rollback)                echo "Rollback" ;;
+        secret-scan)             echo "Secret Scan" ;;
+        *)                       echo "" ;;
+    esac
+}
+
+TIER="2"
+SPEC=""
+SKILL_TOOLS=""
+SEEN=""
+
+emit_resolver() {
+    local name="$1"
+    local marker file
+    marker=$(resolver_marker "$name")
+    file="${RESOLVERS_DIR}/${name}.md"
+
+    if [[ ! -f "$file" ]]; then
+        echo "  ⚠️  missing resolver ${name}.md" >&2
+        return 0
+    fi
+
+    # A guardrail that names a specific tool is noise on a skill that cannot use
+    # that tool — e.g. telling an advisory, read-only skill to "re-read before
+    # every edit" when it was never granted Edit.
+    if [[ "$name" == "edit-integrity" && "$SKILL_TOOLS" != *"Edit"* ]]; then
+        return 0
+    fi
+
+    # Already covered by the skill's own prose — do not duplicate.
+    if [[ -n "$marker" && "$SPEC" == *"$marker"* ]]; then
+        return 0
+    fi
+
+    # Already emitted in this pass.
+    if [[ " $SEEN " == *" $name "* ]]; then
+        return 0
+    fi
+    SEEN="${SEEN} ${name}"
+
+    cat "$file"
 }
 
 # --- Generate a single skill from its .spec file ---
@@ -107,52 +146,31 @@ generate_skill() {
         return 1
     fi
 
-    echo "  📝 Generating ${skill_name}/SKILL.md from .spec..."
+    SPEC=$(cat "$spec_file")
+    TIER=$(printf '%s' "$SPEC" | sed -n 's/^preamble-tier:[[:space:]]*\([0-9]\).*/\1/p' | head -1)
+    [[ -z "$TIER" ]] && TIER="2"
+    # Granted tools drive capability-aware guardrail composition.
+    SKILL_TOOLS=$(printf '%s' "$SPEC" | sed -n 's/^allowed-tools:[[:space:]]*\(.*\)/\1/p' | head -1)
+    SEEN=""
+
+    echo "  📝 ${skill_name} (T${TIER})..."
 
     local tmp_output="${output_file}.tmp"
-
-    # Copy spec to working file
-    cp "$spec_file" "$tmp_output"
-
-    # Substitute each known placeholder with its resolver content.
-    # Uses a temp file approach: read line by line, when we hit a
-    # placeholder line (e.g. {{VOICE}}), inject the resolver file.
     {
         while IFS= read -r line || [[ -n "$line" ]]; do
             case "$line" in
-                "{{VOICE}}")
-                    if [[ -f "${RESOLVERS_DIR}/voice.md" ]]; then
-                        cat "${RESOLVERS_DIR}/voice.md"
-                    fi
+                "{{GUARDRAILS}}")
+                    for r in $(guardrails_for_tier "$TIER"); do
+                        emit_resolver "$r"
+                    done
                     ;;
-                "{{COMPLETION}}")
-                    if [[ -f "${RESOLVERS_DIR}/completion.md" ]]; then
-                        cat "${RESOLVERS_DIR}/completion.md"
-                    fi
-                    ;;
-                "{{CONFUSION}}")
-                    if [[ -f "${RESOLVERS_DIR}/confusion.md" ]]; then
-                        cat "${RESOLVERS_DIR}/confusion.md"
-                    fi
-                    ;;
-                "{{ASK_USER_FORMAT}}")
-                    if [[ -f "${RESOLVERS_DIR}/ask-user-format.md" ]]; then
-                        cat "${RESOLVERS_DIR}/ask-user-format.md"
-                    fi
-                    ;;
-                "{{EFFORT_TABLE}}")
-                    if [[ -f "${RESOLVERS_DIR}/effort-table.md" ]]; then
-                        cat "${RESOLVERS_DIR}/effort-table.md"
-                    fi
-                    ;;
-                "{{LEARNING_LOG}}")
-                    if [[ -f "${RESOLVERS_DIR}/learning-log.md" ]]; then
-                        cat "${RESOLVERS_DIR}/learning-log.md"
-                    fi
-                    ;;
-                *)
-                    echo "$line"
-                    ;;
+                "{{VOICE}}")            emit_resolver voice ;;
+                "{{COMPLETION}}")       emit_resolver completion ;;
+                "{{CONFUSION}}")        emit_resolver confusion ;;
+                "{{ASK_USER_FORMAT}}")  emit_resolver ask-user-format ;;
+                "{{EFFORT_TABLE}}")     emit_resolver effort-table ;;
+                "{{LEARNING_LOG}}")     emit_resolver learning-log ;;
+                *)                      printf '%s\n' "$line" ;;
             esac
         done < "$spec_file"
     } > "$tmp_output"
@@ -161,7 +179,7 @@ generate_skill() {
 
     local line_count
     line_count=$(wc -l < "$output_file" | tr -d ' ')
-    echo "  ✅ ${skill_name}/SKILL.md generated (${line_count} lines)"
+    echo "     ✅ generated (${line_count} lines)"
 }
 
 # --- Generate all skills ---
@@ -175,7 +193,6 @@ generate_all() {
     for skill_dir in "${PROJECT_DIR}/skills"/*/; do
         local name
         name=$(basename "$skill_dir")
-        # Skip _templates directory
         [[ "$name" == "_templates" ]] && continue
 
         if generate_skill "$skill_dir"; then
@@ -193,24 +210,26 @@ generate_all() {
 # --- List all skills ---
 list_skills() {
     echo "=== Skill Template Status ==="
-    printf "%-40s %-8s %-6s\n" "Skill" "Has .spec" "Lines"
-    printf "%-40s %-8s %-6s\n" "-----" "--------" "-----"
+    printf "%-32s %-6s %-8s %-6s\n" "Skill" "Tier" "Has .spec" "Lines"
+    printf "%-32s %-6s %-8s %-6s\n" "-----" "----" "---------" "-----"
 
     for skill_dir in "${PROJECT_DIR}/skills"/*/; do
         local name
         name=$(basename "$skill_dir")
         [[ "$name" == "_templates" ]] && continue
 
+        local tier="?"
         local has_spec="❌"
         local lines=0
         if [[ -f "${skill_dir}/SKILL.md.spec" ]]; then
             has_spec="✅"
+            tier=$(grep -m1 -o 'preamble-tier:[[:space:]]*[0-9]' "${skill_dir}/SKILL.md.spec" | grep -o '[0-9]' || echo "?")
         fi
         if [[ -f "${skill_dir}/SKILL.md" ]]; then
             lines=$(wc -l < "${skill_dir}/SKILL.md" | tr -d ' ')
         fi
 
-        printf "%-40s %-8s %-6s\n" "$name" "$has_spec" "$lines"
+        printf "%-32s %-6s %-8s %-6s\n" "$name" "T${tier}" "$has_spec" "$lines"
     done
 }
 
@@ -227,7 +246,6 @@ validate_specs() {
 
         local issues=()
 
-        # Check for required sections
         grep -q "Iron Law" "$spec_file" || issues+=("missing Iron Law")
         grep -q "HARD-GATE" "$spec_file" || issues+=("missing HARD-GATE")
         grep -q "Failure Modes" "$spec_file" || issues+=("missing Failure Modes")
@@ -235,10 +253,26 @@ validate_specs() {
         grep -q "Verification" "$spec_file" || issues+=("missing Verification")
         grep -q "Decision Tree" "$spec_file" || issues+=("missing Decision Tree")
         grep -q "Collaborative Links" "$spec_file" || issues+=("missing Collaborative Links")
-        grep -q "preamble-tier" "$spec_file" || issues+=("missing preamble-tier")
+
+        local tier
+        tier=$(sed -n 's/^preamble-tier:[[:space:]]*\([0-9]\).*/\1/p' "$spec_file" | head -1)
+        if [[ -z "$tier" ]]; then
+            issues+=("missing preamble-tier")
+        elif [[ ! "$tier" =~ ^[1-4]$ ]]; then
+            issues+=("invalid preamble-tier: ${tier}")
+        fi
+
+        if ! grep -q "{{GUARDRAILS}}" "$spec_file"; then
+            issues+=("missing {{GUARDRAILS}} marker")
+        fi
+
+        # Stale single-resolver placeholders left over from the pre-1.6 layout.
+        if grep -qE '\{\{(VOICE|COMPLETION|CONFUSION|ASK_USER_FORMAT|EFFORT_TABLE|LEARNING_LOG)\}\}' "$spec_file"; then
+            issues+=("legacy placeholder present — replace with {{GUARDRAILS}}")
+        fi
 
         if [[ ${#issues[@]} -eq 0 ]]; then
-            echo "  ✅ ${name}"
+            echo "  ✅ T${tier} ${name}"
             valid=$((valid + 1))
         else
             echo "  ❌ ${name}: ${issues[*]}"
@@ -248,6 +282,7 @@ validate_specs() {
 
     echo ""
     echo "Valid: ${valid} | Invalid: ${invalid}"
+    [[ $invalid -eq 0 ]]
 }
 
 # --- Main ---

@@ -248,10 +248,4 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 }
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

@@ -101,12 +101,21 @@ mkdir -p "$PROJECT_DIR"
 
 LEARNINGS_FILE="${PROJECT_DIR}/learnings.jsonl"
 
+# Escape a string for embedding in JSON (fallback path only).
+json_escape() {
+    printf '%s' "$1" \
+        | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\t/\\t/g' -e 's/\r//g' \
+        | tr '\n' ' '
+}
+
 # --- Build JSON ---
+# Every branch must emit exactly ONE line: this file is .jsonl, and the reader
+# (SessionStart tail / grep) is line-oriented.
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-# Use jq if available for proper JSON, fallback to printf
 if command -v jq &>/dev/null; then
-    JSON=$(jq -n \
+    # -c = compact: without it jq pretty-prints and one entry becomes 9 lines.
+    JSON=$(jq -c -n \
         --arg skill "$SKILL" \
         --arg type "$TYPE" \
         --arg key "$KEY" \
@@ -115,9 +124,19 @@ if command -v jq &>/dev/null; then
         --arg timestamp "$TIMESTAMP" \
         --arg repo "$PROJECT_SLUG" \
         '{skill: $skill, type: $type, key: $key, insight: $insight, confidence: ($confidence | tonumber), timestamp: $timestamp, repo: $repo}')
+elif command -v python3 &>/dev/null; then
+    JSON=$(VC_SKILL="$SKILL" VC_TYPE="$TYPE" VC_KEY="$KEY" VC_INSIGHT="$INSIGHT" \
+        VC_CONF="$CONFIDENCE" VC_TS="$TIMESTAMP" VC_REPO="$PROJECT_SLUG" \
+        python3 -c 'import json, os
+print(json.dumps({
+    "skill": os.environ["VC_SKILL"], "type": os.environ["VC_TYPE"],
+    "key": os.environ["VC_KEY"], "insight": os.environ["VC_INSIGHT"],
+    "confidence": float(os.environ["VC_CONF"]),
+    "timestamp": os.environ["VC_TS"], "repo": os.environ["VC_REPO"],
+}, separators=(",", ":")))')
 else
-    # Fallback: manual JSON (no jq dependency)
-    JSON="{\"skill\":\"$SKILL\",\"type\":\"$TYPE\",\"key\":\"$KEY\",\"insight\":\"$INSIGHT\",\"confidence\":$CONFIDENCE,\"timestamp\":\"$TIMESTAMP\",\"repo\":\"$PROJECT_SLUG\"}"
+    # Fallback: manual JSON with escaping and newlines collapsed.
+    JSON="{\"skill\":\"$(json_escape "$SKILL")\",\"type\":\"$(json_escape "$TYPE")\",\"key\":\"$(json_escape "$KEY")\",\"insight\":\"$(json_escape "$INSIGHT")\",\"confidence\":${CONFIDENCE},\"timestamp\":\"${TIMESTAMP}\",\"repo\":\"$(json_escape "$PROJECT_SLUG")\"}"
 fi
 
 # --- Write ---

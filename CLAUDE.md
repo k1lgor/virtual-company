@@ -70,7 +70,7 @@ scripts/log-learning.sh \
 - One-off environment issues that won't recur
 - Things already documented in CLAUDE.md
 
-**At session start**, relevant learnings are loaded automatically. The `log-learning.sh` script stores entries in `~/.virtual-company/projects/<project-slug>/learnings.jsonl` — each entry is a single JSON line for fast grep/tail access.
+**At session start**, the `SessionStart` hook runs `scripts/load-learnings.sh`, which prints the last 5 entries from `~/.virtual-company/projects/<project-slug>/learnings.jsonl`. `log-learning.sh` writes those entries as single, escaped JSON lines (compact `jq -c`, with `python3` and pure-shell fallbacks) so grep and `tail` stay reliable.
 
 ---
 
@@ -118,14 +118,18 @@ When deciding scope (build vs skip, complete vs minimal), use this reference. Th
 
 ## 📊 Preamble Tier System
 
-Skills operate at different complexity levels. The `preamble-tier` field in each SKILL.md frontmatter controls which guardrail sections are active, saving tokens on simple skills while applying full discipline to critical ones.
+Skills operate at different complexity levels. The `preamble-tier` field in each `SKILL.md.spec` frontmatter controls which guardrail sections are active, saving tokens on simple skills while applying full discipline to critical ones.
 
 | Tier | Skills | Active Sections |
 |------|--------|-----------------|
-| **T1** — Minimal | `doc-writer`, `migration-upgrader`, `skill-generator`, `data-analyst` | Voice Directive, Completion Status Protocol |
-| **T2** — Standard | Most domain experts (frontend, backend, API, data, ML, UX, mobile, Docker, K8s, infra, CI, observability, search, legacy, product, E2E) | T1 + Confusion Protocol, AskUserQuestion format |
-| **T3** — Complex | `tech-lead`, `workflow-orchestrator`, `bug-hunter`, `code-polisher`, `performance-profiler` | T2 + Context Decay Awareness, Verification Discipline, Sub-Agent Swarming, Edit Integrity |
-| **T4** — Maximum | `security-reviewer`, `test-genius` | T3 + Escalation Paths, Additional Hard Gates, Rollback Procedures, Secret Scanning |
+| **T1** — Minimal | `doc-writer`, `skill-generator`, `data-analyst` | `voice`, `completion`, `learning-log` |
+| **T2** — Standard | Most domain experts (frontend, backend, API, data, ML, UX, mobile, Docker, K8s, infra, CI, observability, search, legacy, product, E2E) plus `migration-upgrader` (irreversible data operations — never "no ceremony") | T1 + `confusion`, `ask-user-format` |
+| **T3** — Complex | `tech-lead`, `workflow-orchestrator`, `bug-hunter`, `code-polisher`, `performance-profiler` | T2 + `context-decay`, `sub-agent-swarming`, `edit-integrity`, `verification-discipline`, `effort-table` |
+| **T4** — Maximum | `security-reviewer`, `test-genius` | T3 + `escalation`, `rollback`, `secret-scan` |
+
+**This table is enforced, not aspirational.** `scripts/gen-skills.sh` reads `preamble-tier` and expands the `{{GUARDRAILS}}` marker with exactly the resolvers listed above (`skills/_templates/resolvers/*.md`). Regenerate with `gen-skills.sh --all` after editing a tier or a resolver; `gen-skills.sh --validate` fails if a spec has no `{{GUARDRAILS}}` marker, an invalid tier, or a stale single-resolver placeholder.
+
+**Dedupe rule:** if a skill already covers a guardrail in its own words (e.g. bug-hunter's hand-written "Edit Integrity"), the resolver is skipped rather than injected twice.
 
 **When invoking a skill**, check its `preamble-tier` in the frontmatter. Apply ONLY the sections listed for that tier — don't waste context on escalation paths for a documentation task, and don't skip security scanning because the tier is low.
 
@@ -247,6 +251,8 @@ Invoke these roles using `Agent(name, "task")` for isolated, high-effort delegat
 | **code-reviewer**     | Audit          | Peer review, maintainability, and naming standards.      |
 | **security-reviewer** | Protection     | Vulnerability scanning and risk mitigation.              |
 | **qa-engineer**       | Verification   | Automated testing, E2E validation, and bug reproduction. |
+
+**Namespace note:** `tech-lead` and `security-reviewer` exist in BOTH registries — as an agent (isolated, multi-phase delegation via `Agent(...)`) and as a skill (an in-domain playbook invoked with `/tech-lead` or `/security-reviewer`). They are different objects with the same name. When the Proactive Skill Routing table below says "route to `security-reviewer`", it means the skill; when a failure mode says "re-dispatch the agent", it means `Agent(security-reviewer, ...)`. Pick the agent for multi-step autonomy, the skill for a focused single pass.
 
 ---
 
@@ -465,11 +471,16 @@ All hard gates are enforced by concrete scripts in `<project_root>/scripts/`. Us
 
 | Script                 | Purpose                                | Example                                                                  |
 | ---------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
-| `validate-skill.sh`    | Validate SKILL.md quality (score 1-10) | `validate-skill.sh ./skills/02-bug-hunter/SKILL.md`                      |
+| `validate-skill.sh`    | Validate SKILL.md quality (score 1-11) | `validate-skill.sh ./skills/02-bug-hunter/SKILL.md`                      |
 | `security-sentinel.sh` | Scan for leaked secrets/credentials    | `security-sentinel.sh --text src/`                                       |
 | `verify-gate.sh`       | Run verification command + log result  | `verify-gate.sh --gate-name lint --command "eslint ." --log gates.tsv`   |
 | `coverage-gate.sh`     | Enforce test coverage threshold        | `coverage-gate.sh --threshold 80`                                        |
 | `audit-deps.sh`        | Check dependencies for CVEs            | `audit-deps.sh --severity high --fix`                                    |
+| `gen-skills.sh`        | Regenerate SKILL.md from specs + tier  | `gen-skills.sh --all` / `gen-skills.sh --validate`                       |
+| `log-learning.sh`      | Record a durable project learning      | `log-learning.sh --skill bug-hunter --type gotcha --key k --insight "..."` |
+| `load-learnings.sh`    | Print recent learnings (SessionStart)  | `load-learnings.sh --lines 5`                                            |
+
+**Gate scripts fail closed.** `verify-gate.sh` propagates the real exit code, `coverage-gate.sh` refuses to score coverage when the test command failed, and `audit-deps.sh` exits 2 when it cannot parse audit output rather than reporting a clean bill of health.
 
 **Gate verification pattern:** Use `verify-gate.sh` to run any command as a logged gate check:
 

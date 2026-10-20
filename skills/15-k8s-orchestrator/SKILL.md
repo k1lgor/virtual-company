@@ -313,24 +313,6 @@ Before claiming ANY status:
 4. NEEDS_CONTEXT must ask a specific question, NOT "need more info"
 5. NEVER claim DONE without evidence. "It should work" is not evidence.
 </HARD-GATE>
-
-## 🤔 Confusion Protocol
-
-For high-stakes ambiguity (architecture decisions, data model changes, destructive scope, missing context), do NOT guess.
-
-1. **STOP.** Do not proceed with implementation.
-2. **Name it** in one sentence — what specifically is ambiguous?
-3. **Present 2-3 options** with concrete trade-offs for each.
-4. **Recommend** one option with reasoning.
-5. **ASK** the user before proceeding.
-
-Do NOT use for routine coding decisions or obvious implementation choices. Reserve for:
-- Architecture patterns that affect multiple components
-- Data model changes with migration implications
-- Security-sensitive design decisions
-- Scope that could be interpreted 2+ fundamentally different ways
-- Destructive operations (data deletion, schema drops, permissions changes)
-
 ## 🧠 Operational Self-Improvement (Learning Log)
 
 Skills get smarter with use. Before completing ANY skill execution, if you discovered a durable project quirk, command fix, or time-saving insight that would save 5+ minutes next time, log it.
@@ -349,3 +331,45 @@ scripts/log-learning.sh \
 **When NOT to log:** general knowledge, one-off env issues, things already in CLAUDE.md.
 
 **Learnings stored in** `~/.virtual-company/projects/<project-slug>/learnings.jsonl` — loaded at session start.
+## 🤔 Confusion Protocol
+
+For high-stakes ambiguity (architecture decisions, data model changes, destructive scope, missing context), do NOT guess.
+
+1. **STOP.** Do not proceed with implementation.
+2. **Name it** in one sentence — what specifically is ambiguous?
+3. **Present 2-3 options** with concrete trade-offs for each.
+4. **Recommend** one option with reasoning.
+5. **ASK** the user before proceeding.
+
+Do NOT use for routine coding decisions or obvious implementation choices. Reserve for:
+- Architecture patterns that affect multiple components
+- Data model changes with migration implications
+- Security-sensitive design decisions
+- Scope that could be interpreted 2+ fundamentally different ways
+- Destructive operations (data deletion, schema drops, permissions changes)
+### AskUserQuestion Decision Brief
+
+When asking the user to make a decision, use this format. Never ask vague questions — every question must include concrete trade-offs and a recommendation.
+
+```
+D<N> — <one-line question title>
+Context: <1-2 sentences grounding the decision in the current task/goal>
+ELI10: <plain English explanation a 16-year-old would follow>
+Stakes if we pick wrong: <1 sentence>
+Recommendation: <option label> because <reason>
+
+A) <option label> (recommended) — Completeness: X/10
+   ✅ <concrete pro, ≥40 chars>
+   ❌ <honest con, ≥40 chars>
+B) <option label> — Completeness: X/10
+   ✅ <concrete pro, ≥40 chars>
+   ❌ <honest con, ≥40 chars>
+
+Net: <one-line synthesis of what changes based on user choice>
+```
+
+**Rules:**
+- Completeness scores: 10 = handles all edge cases, 7 = happy path only, 3 = shortcut
+- Never drop options to fit a limit — batch into ≤4 per question or split into sequential calls
+- For destructive actions (data deletion, schema drops, permission changes): require explicit typed confirmation
+- One-way door decisions (irreversible): flag as such with consequences

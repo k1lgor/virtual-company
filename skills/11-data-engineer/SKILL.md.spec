@@ -260,10 +260,4 @@ def etl_pipeline(source, target):
 
 "No completion claims without fresh verification evidence."
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

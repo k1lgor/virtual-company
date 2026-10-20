@@ -240,10 +240,4 @@ If tech-lead pushes back on scope/timeline → discuss tradeoffs, not "just make
 - [ ] Documentation updated
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

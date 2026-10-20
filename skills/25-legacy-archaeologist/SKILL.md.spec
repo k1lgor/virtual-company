@@ -264,10 +264,4 @@ HIGH: config.py:12 - Hardcoded database password
 MEDIUM: routes/api.py:145 - No input validation on user_id
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

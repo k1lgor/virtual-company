@@ -116,7 +116,10 @@ echo -e "Project: ${CYAN}$PROJECT_TYPE${NC}"
 echo ""
 
 # --- Run audit ---
-OUTPUT=$(eval "$AUDIT_CMD" 2>&1) || true
+set +e
+OUTPUT=$(eval "$AUDIT_CMD" 2>&1)
+AUDIT_EXIT=$?
+set -e
 
 # --- Parse results ---
 CRITICAL=0
@@ -125,96 +128,107 @@ MEDIUM=0
 LOW=0
 VULNS=""
 
+# JSON parsing capability: jq preferred, python3 fallback. If neither exists we
+# cannot read the audit output — and "cannot read" must never be reported as
+# "no vulnerabilities" (the old code silently produced zeros and said "clean").
+JSON_PARSER=""
+if command -v jq >/dev/null 2>&1; then
+    JSON_PARSER="jq"
+elif command -v python3 >/dev/null 2>&1; then
+    JSON_PARSER="python3"
+fi
+
+# count_json <jq-filter> <python-expression-on-d>
+# Prints an integer, or FAIL when no parser is available or parsing breaks.
+count_json() {
+    local filter="$1" expr="$2" out=""
+    case "$JSON_PARSER" in
+        jq)
+            out=$(printf '%s' "$OUTPUT" | jq -r "$filter" 2>/dev/null || true)
+            ;;
+        python3)
+            out=$(printf '%s' "$OUTPUT" | python3 -c "import sys, json
+try:
+    d = json.load(sys.stdin)
+    print(int($expr))
+except Exception:
+    print('FAIL')" 2>/dev/null || true)
+            ;;
+        *)
+            out="FAIL"
+            ;;
+    esac
+    if [[ "$out" =~ ^[0-9]+$ ]]; then
+        echo "$out"
+    else
+        echo "FAIL"
+    fi
+}
+
 case "$PROJECT_TYPE" in
     node)
         # npm audit JSON output
-        CRITICAL=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    meta = d.get('metadata', {}).get('vulnerabilities', {})
-    print(meta.get('critical', 0))
-except: print(0)
-" 2>/dev/null || echo 0)
-        HIGH=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    meta = d.get('metadata', {}).get('vulnerabilities', {})
-    print(meta.get('high', 0))
-except: print(0)
-" 2>/dev/null || echo 0)
-        MEDIUM=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    meta = d.get('metadata', {}).get('vulnerabilities', {})
-    print(meta.get('moderate', meta.get('medium', 0)))
-except: print(0)
-" 2>/dev/null || echo 0)
-        LOW=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    meta = d.get('metadata', {}).get('vulnerabilities', {})
-    print(meta.get('low', 0))
-except: print(0)
-" 2>/dev/null || echo 0)
+        CRITICAL=$(count_json '(.metadata.vulnerabilities.critical // 0)' "d.get('metadata',{}).get('vulnerabilities',{}).get('critical',0)")
+        HIGH=$(count_json '(.metadata.vulnerabilities.high // 0)' "d.get('metadata',{}).get('vulnerabilities',{}).get('high',0)")
+        MEDIUM=$(count_json '(.metadata.vulnerabilities.moderate // .metadata.vulnerabilities.medium // 0)' "d.get('metadata',{}).get('vulnerabilities',{}).get('moderate', d.get('metadata',{}).get('vulnerabilities',{}).get('medium',0))")
+        LOW=$(count_json '(.metadata.vulnerabilities.low // 0)' "d.get('metadata',{}).get('vulnerabilities',{}).get('low',0)")
         ;;
     python)
         # pip-audit or safety JSON
-        CRITICAL=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    if isinstance(d, list):
-        print(len([v for v in d if v.get('severity','').lower() in ('critical','high')]))
-    else:
-        print(d.get('summary', {}).get('critical', 0))
-except: print(0)
-" 2>/dev/null || echo 0)
+        CRITICAL=$(count_json '(if type=="array" then ([.[]|select((((.severity//"")|ascii_downcase)|test("critical|high")))]|length) else (.summary.critical//0) end)' "len([v for v in d if str(v.get('severity','')).lower() in ('critical','high')]) if isinstance(d,list) else d.get('summary',{}).get('critical',0)")
         HIGH=0  # pip-audit doesn't always differentiate
         ;;
     go)
-        # govulncheck output
-        CRITICAL=$(echo "$OUTPUT" | grep -ci "CRITICAL" || echo 0)
-        HIGH=$(echo "$OUTPUT" | grep -ci "HIGH" || echo 0)
-        MEDIUM=$(echo "$OUTPUT" | grep -ci "MEDIUM" || echo 0)
-        LOW=$(echo "$OUTPUT" | grep -ci "LOW" || echo 0)
+        # govulncheck output — text, so count occurrences. `grep -c` prints 0 and
+        # exits 1 when there are no matches; `|| echo 0` appended a SECOND zero
+        # and broke the arithmetic below.
+        CRITICAL=$(printf '%s' "$OUTPUT" | grep -ci "CRITICAL" || true)
+        HIGH=$(printf '%s' "$OUTPUT" | grep -ci "HIGH" || true)
+        MEDIUM=$(printf '%s' "$OUTPUT" | grep -ci "MEDIUM" || true)
+        LOW=$(printf '%s' "$OUTPUT" | grep -ci "LOW" || true)
         ;;
     rust)
-        CRITICAL=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    vulns = d.get('vulnerabilities', {}).get('list', [])
-    print(len([v for v in vulns if v.get('advisory', {}).get('cvss', 0) >= 9]))
-except: print(0)
-" 2>/dev/null || echo 0)
-        HIGH=$(echo "$OUTPUT" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    vulns = d.get('vulnerabilities', {}).get('list', [])
-    print(len([v for v in vulns if 7 <= v.get('advisory', {}).get('cvss', 0) < 9]))
-except: print(0)
-" 2>/dev/null || echo 0)
+        CRITICAL=$(count_json '[(.vulnerabilities.list//[])[]|(.advisory.cvss//0)]|map(select(.>=9))|length' "len([v for v in d.get('vulnerabilities',{}).get('list',[]) if v.get('advisory',{}).get('cvss',0)>=9])")
+        HIGH=$(count_json '[(.vulnerabilities.list//[])[]|(.advisory.cvss//0)]|map(select(.>=7 and .<9))|length' "len([v for v in d.get('vulnerabilities',{}).get('list',[]) if 7<=v.get('advisory',{}).get('cvss',0)<9])")
         ;;
     ruby)
-        CRITICAL=$(echo "$OUTPUT" | grep -ci "critical" || echo 0)
-        HIGH=$(echo "$OUTPUT" | grep -ci "high" || echo 0)
-        MEDIUM=$(echo "$OUTPUT" | grep -ci "medium" || echo 0)
-        LOW=$(echo "$OUTPUT" | grep -ci "low" || echo 0)
+        CRITICAL=$(printf '%s' "$OUTPUT" | grep -ci "critical" || true)
+        HIGH=$(printf '%s' "$OUTPUT" | grep -ci "high" || true)
+        MEDIUM=$(printf '%s' "$OUTPUT" | grep -ci "medium" || true)
+        LOW=$(printf '%s' "$OUTPUT" | grep -ci "low" || true)
         ;;
 esac
 
+# --- Fail closed on unparseable output ---
+for v in CRITICAL HIGH MEDIUM LOW; do
+    if [[ "${!v}" == "FAIL" ]]; then
+        echo -e "${RED}ERROR${NC}: could not parse ${PROJECT_TYPE} audit output." >&2
+        echo "Audit status is UNKNOWN — refusing to report a clean result." >&2
+        if [[ -z "$JSON_PARSER" ]]; then
+            echo "Install 'jq' (preferred) or 'python3' to enable audit-result parsing." >&2
+        fi
+        echo "Audit command exit code: ${AUDIT_EXIT}" >&2
+        printf '%s\n' "$OUTPUT" | tail -20 >&2
+        exit 2
+    fi
+done
+
 # Ensure numeric
-CRITICAL=${CRITICAL:-0}
-HIGH=${HIGH:-0}
-MEDIUM=${MEDIUM:-0}
-LOW=${LOW:-0}
+CRITICAL=$((CRITICAL + 0))
+HIGH=$((HIGH + 0))
+MEDIUM=$((MEDIUM + 0))
+LOW=$((LOW + 0))
 
 TOTAL=$((CRITICAL + HIGH + MEDIUM + LOW))
+
+# A non-zero audit exit with zero parsed findings means the tool errored, not
+# that the project is clean.
+if [[ $AUDIT_EXIT -ne 0 && $TOTAL -eq 0 ]]; then
+    echo -e "${RED}ERROR${NC}: audit exited ${AUDIT_EXIT} but no findings were parsed." >&2
+    echo "The dependency audit did not complete — result is unreliable." >&2
+    printf '%s\n' "$OUTPUT" | tail -20 >&2
+    exit 2
+fi
 
 # --- Output summary ---
 echo -e "${BOLD}Vulnerability Summary:${NC}"

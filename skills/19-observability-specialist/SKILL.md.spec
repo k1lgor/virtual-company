@@ -330,10 +330,4 @@ groups:
 
 "No service goes to production without SLI-based alerting."
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

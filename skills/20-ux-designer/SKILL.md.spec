@@ -259,10 +259,4 @@ Every interactive element must have all states defined:
 }
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

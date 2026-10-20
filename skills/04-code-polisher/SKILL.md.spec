@@ -286,10 +286,4 @@ if elapsed > SECONDS_PER_DAY:
     archive()
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

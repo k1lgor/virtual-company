@@ -297,10 +297,4 @@ def hybrid_search(query, top_k=10):
 
 "No completion claims without fresh verification evidence."
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

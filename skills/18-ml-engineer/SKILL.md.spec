@@ -267,10 +267,4 @@ print(classification_report(y_test, y_pred))
 joblib.dump(pipeline, 'model_v1.pkl')
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

@@ -250,10 +250,4 @@ graph LR
 
 "No documentation ships without tested code examples."
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

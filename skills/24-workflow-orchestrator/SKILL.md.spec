@@ -291,10 +291,4 @@ def send_email(self, user_id, email_type):
         raise self.retry(exc=exc, countdown=2 ** self.request.retries)
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

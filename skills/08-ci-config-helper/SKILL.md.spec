@@ -264,10 +264,4 @@ fi
 
 "No pipeline config merges without secret safety + cache verification."
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

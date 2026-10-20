@@ -76,12 +76,29 @@ echo -e "${BOLD}Gate:${NC} ${CYAN}$GATE_NAME${NC}"
 echo -e "${BOLD}Command:${NC} $COMMAND"
 echo ""
 
-START_MS=$(date +%s%3N 2>/dev/null || python3 -c "import time; print(int(time.time()*1000))")
+# Portable millisecond clock. `date +%s%3N` is GNU-only, so fall back to
+# whole seconds instead of requiring python3 (absent on many dev machines).
+now_ms() {
+    local ms
+    ms=$(date +%s%3N 2>/dev/null || true)
+    if [[ "$ms" =~ ^[0-9]+$ ]]; then
+        echo "$ms"
+    else
+        echo $(( $(date +%s) * 1000 ))
+    fi
+}
 
-OUTPUT=$(eval "$COMMAND" 2>&1) || true
+START_MS=$(now_ms)
+
+# Capture the command's REAL exit status. The previous `|| true` swallowed it:
+# `$?` became the status of `true` (always 0), so every gate reported PASS and
+# every HARD-GATE that depends on this script was decorative.
+set +e
+OUTPUT=$(eval "$COMMAND" 2>&1)
 EXIT_CODE=$?
+set -e
 
-END_MS=$(date +%s%3N 2>/dev/null || python3 -c "import time; print(int(time.time()*1000))")
+END_MS=$(now_ms)
 DURATION_MS=$((END_MS - START_MS))
 
 # --- Determine status ---

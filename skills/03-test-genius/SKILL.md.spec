@@ -304,10 +304,4 @@ OrderCalculatesTax() {
 
 "No completion claims without fresh verification evidence."
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

@@ -338,10 +338,4 @@ B -->|No| D[Action 2]
 \`\`\`
 ```
 
-{{VOICE}}
-
-{{COMPLETION}}
-
-{{CONFUSION}}
-
-{{LEARNING_LOG}}
+{{GUARDRAILS}}

@@ -5,6 +5,38 @@ All notable changes to the Virtual Company plugin will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] — 2026-10-20
+
+Audit release: the quality gates, the learning log, and the preamble-tier system were all
+non-functional as shipped. This release makes them do what the documentation already claimed.
+
+### Fixed
+
+- **`verify-gate.sh` could not fail.** `OUTPUT=$(eval …) || true` overwrote `$?` with the status of `true`, so the script always reported PASS and exited 0 — every HARD-GATE that says "use verify-gate.sh" was decorative. It now captures the real exit code and propagates it. The millisecond timer no longer requires `python3`.
+- **`coverage-gate.sh` ignored failing tests** (`EXIT_CODE` was assigned and never read) and **always failed when `bc` was missing** (not installed on Git Bash/Windows). A failing test command now fails the gate before coverage is parsed; the float comparison uses `awk`.
+- **`audit-deps.sh` failed open.** With `python3` unavailable — or when the audit tool errored — every count became 0 and it reported "No known vulnerabilities found". It now exits 2 when the output cannot be parsed, and parsing goes `jq` → `python3` → explicit failure instead of silently defaulting to zero. Also fixed `grep -c … || echo 0` emitting a second zero that broke the arithmetic in the Go/Ruby paths.
+- **`validate-skill.sh` scored out of the wrong maximum.** After the Preamble Tier check was added there are 11 achievable points but `MAX_SCORE` stayed 10, so it printed "11/10" and the pass bar silently loosened. Threshold is now 10/11. Also fixed a `grep -c` double-zero arithmetic error on skills with no code blocks.
+- **`log-learning.sh` corrupted its own store.** `jq -n` pretty-prints, so one entry became 9 lines in a `.jsonl` file — breaking `wc -l`, `tail`, and the documented "single JSON line" contract. The no-`jq` fallback emitted invalid JSON whenever the insight contained a quote. All three branches now emit exactly one escaped line.
+- **`00-tech-lead`** had a second `## 🚨 Failure Modes` heading sitting above dispatch examples; relabelled `## 💡 Dispatch Patterns`.
+- **`security-reviewer` agent** blocked `Bash`, so it could not run `security-sentinel.sh` — the exact command its own HARD-GATE requires. `disallowedTools` is now `[Edit]`.
+
+### Changed
+
+- **The preamble-tier system is now enforced, not aspirational.** `gen-skills.sh` reads `preamble-tier` from each spec and composes `{{GUARDRAILS}}` accordingly: T1 = voice/completion/learning-log, T2 adds confusion + ask-user-format, T3 adds context-decay, sub-agent-swarming, edit-integrity, verification-discipline and effort-table, T4 adds escalation, rollback and secret-scan. A resolver is skipped when the skill already covers it in its own words, so hand-written sections are never duplicated.
+- All 27 specs converted from four single-resolver placeholders to one `{{GUARDRAILS}}` marker. `gen-skills.sh --validate` now rejects legacy placeholders, missing markers, and invalid tiers.
+- `migration-upgrader` reclassified T1 → T2. It was labelled "minimal / no ceremony" while its own Iron Law demands a rollback plan and explicit approval for irreversible data operations. It now carries the Confusion Protocol and AskUserQuestion format that its approval gate points at. Tier distribution is now T1 = 3, T2 = 17, T3 = 5, T4 = 2.
+- `marketplace.json` version `1.4.2` → `1.6.0` (it was lagging `plugin.json` and `CHANGELOG`); script-count claims corrected from 5 to 8 across `README.md`, `plugin.json` and `marketplace.json`.
+- `CLAUDE.md`: tier table now names the exact resolvers per tier; Verification Scripts table lists all 8 scripts; the learnings claim names the mechanism that implements it; namespace note added explaining that `tech-lead` and `security-reviewer` exist as both an agent and a skill.
+
+### Added
+
+- Seven tier resolvers: `context-decay`, `sub-agent-swarming`, `edit-integrity`, `verification-discipline`, `escalation`, `rollback`, `secret-scan`.
+- `scripts/load-learnings.sh`, wired into the `SessionStart` hook — learnings are now actually loaded at session start, which `CLAUDE.md` had claimed since 1.5.0 without any implementation.
+
+### Removed
+
+- `skills/_templates/SKILL.md.tmpl` — dead file. `gen-skills.sh` never read it (it composes from `.spec`), and it carried a `{{PREAMPLE_TIER}}` typo proving it was never executed.
+
 ## [1.5.0] — 2026-07-02
 
 ### Added

@@ -33,15 +33,15 @@ ${BOLD}REQUIRED SECTIONS:${NC}
     6. Decision Tree / mermaid / flowchart
     7. Collaborative Links / collaborative-links
 
-${BOLD}SCORING (10 max):${NC}
-    - 1 point per required section (7 max)
+${BOLD}SCORING (11 max):${NC}
+    - 1 point per required section (8 max)
     - 1 point for no placeholders (TODO, TBD, FIXME, etc.)
     - 1 point for examples section
     - 1 point for concrete code blocks
 
 ${BOLD}EXIT CODES:${NC}
-    0 = score >= 9 (PASS)
-    1 = score < 9 (FAIL)
+    0 = score >= 10 (PASS)
+    1 = score < 10 (FAIL)
 
 ${BOLD}EXAMPLE:${NC}
     validate-skill.sh ./skills/02-bug-hunter/SKILL.md
@@ -64,7 +64,10 @@ if [[ ! -f "$SKILL_FILE" ]]; then
 fi
 
 SCORE=0
-MAX_SCORE=10
+# 8 section checks + placeholder + examples + code blocks = 11 achievable points.
+MAX_SCORE=11
+# ~90% of achievable points, matching the original 9/10 bar.
+PASS_THRESHOLD=10
 MISSING=()
 
 # --- Section checks (7 points) ---
@@ -115,8 +118,11 @@ else
 fi
 
 # --- Code blocks check (1 point) ---
-# Look for fenced code blocks with language tags
-CODE_BLOCK_COUNT=$(grep -c '^\s*```[a-zA-Z]' "$SKILL_FILE" 2>/dev/null || echo 0)
+# Look for fenced code blocks with language tags.
+# `grep -c` prints 0 and exits 1 on no match — `|| echo 0` appended a second
+# zero and broke the arithmetic test below.
+CODE_BLOCK_COUNT=$(grep -c '^[[:space:]]*```[a-zA-Z]' "$SKILL_FILE" 2>/dev/null || true)
+CODE_BLOCK_COUNT=$((CODE_BLOCK_COUNT + 0))
 if [[ "$CODE_BLOCK_COUNT" -ge 1 ]]; then
     SCORE=$((SCORE + 1))
 else
@@ -128,7 +134,7 @@ echo -e "${BOLD}=== Skill Quality Validator ===${NC}"
 echo -e "File: ${CYAN}$SKILL_FILE${NC}"
 echo ""
 
-if [[ $SCORE -ge 9 ]]; then
+if [[ $SCORE -ge $PASS_THRESHOLD ]]; then
     echo -e "Score: ${GREEN}${SCORE}/${MAX_SCORE}${NC} ${GREEN}PASS${NC}"
 else
     echo -e "Score: ${RED}${SCORE}/${MAX_SCORE}${NC} ${RED}FAIL${NC}"
@@ -153,7 +159,7 @@ if [[ $PLACEHOLDER_FOUND -eq 1 ]]; then
 fi
 
 # --- Exit code ---
-if [[ $SCORE -ge 9 ]]; then
+if [[ $SCORE -ge $PASS_THRESHOLD ]]; then
     exit 0
 else
     exit 1
