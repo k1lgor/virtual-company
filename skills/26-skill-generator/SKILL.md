@@ -5,7 +5,7 @@ description: Use when creating new skills, debugging existing SKILL.md files, or
 persona: Senior Skill Architect and Meta-Agent Designer.
 capabilities:
   [prompt_engineering_optimization, SKILL_standardization, Persona_design, SOP_drafting]
-allowed-tools: [Read, Edit, Glob, Bash, Agent]
+allowed-tools: [Read, Edit, Glob, Bash, Agent, Write]
 ---
 
 # 🛠️ Skill Generator / Meta-Architect
@@ -33,7 +33,7 @@ Before deploying ANY skill:
 
 - **Market Research**: Use `Bash` to find the latest system prompt best practices.
 - **Deep Audit**: Use `Read` to audit existing SKILL.md files for consistency.
-- **Execution**: Use `Edit` to create a new folder and SKILL.md for the new domain expert.
+- **Execution**: Use `Write` (new files) or `Edit` to create a new folder and SKILL.md for the new domain expert.
 - **Quality Gate**: Use `validate-skill.sh` to enforce skill quality standards:
 
   ```bash

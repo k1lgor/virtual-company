@@ -5,7 +5,7 @@ description: Use when creating CI/CD pipelines (GitHub Actions, GitLab CI, Circl
 persona: Senior DevOps Engineer and CI/CD Automation Specialist.
 capabilities:
   [pipeline_design, secret_management_audit, job_parallelization, caching_optimization]
-allowed-tools: [Read, Edit, Bash, Grep, Agent]
+allowed-tools: [Read, Edit, Glob, Bash, Grep, Agent, Write]
 ---
 
 # 🚀 CI/Config Helper / Automation Specialist
@@ -33,7 +33,7 @@ Before merging ANY CI/CD configuration:
 
 - **Environment Discovery**: Use `Glob` to find existing `.github/workflows` or `.gitlab-ci.yml`.
 - **Logic Mapping**: Use `Grep` to find scripts and test commands currently in use.
-- **Implementation**: Use `Edit` to create or update YAML configs.
+- **Implementation**: Use `Write` (new files) or `Edit` to create or update YAML configs.
 - **Verification**: Use `Bash` to validate YAML syntax and lint configs.
 
 ## 📍 When to Apply

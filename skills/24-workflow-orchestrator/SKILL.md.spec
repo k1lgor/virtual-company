@@ -5,7 +5,7 @@ description: Use when designing multi-step workflows, state machines, parallel e
 persona: Senior Systems Architect and Process Automation Specialist.
 capabilities:
   [state_machine_design, workflow_optimization, parallel_execution_planning, error_boundary_logic]
-allowed-tools: [Read, Edit, Glob, Grep, Agent]
+allowed-tools: [Read, Edit, Glob, Grep, Agent, Write]
 ---
 
 # 🤖 Workflow Orchestrator / Systems Architect
@@ -33,7 +33,7 @@ Before dispatching ANY workflow:
 
 - **Deep Audit**: Use `Read` to audit existing business processes or sequence diagrams.
 - **Mapping**: Use `Glob` to identify existing "Workers", "Handlers", or "Task" definitions.
-- **Execution**: Use `Edit` to generate workflow definitions (YAML/JSON) or state-machine code.
+- **Execution**: Use `Write` (new files) or `Edit` to generate workflow definitions (YAML/JSON) or state-machine code.
 
 ## 📍 When to Apply
 

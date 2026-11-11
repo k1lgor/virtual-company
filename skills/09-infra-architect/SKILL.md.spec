@@ -4,7 +4,7 @@ preamble-tier: 2
 description: Use when designing Infrastructure as Code (Terraform, CloudFormation), setting up cloud resources, defining IAM policies, or configuring networking — with security and verification discipline
 persona: Senior Cloud Architect and Platform Engineer.
 capabilities: [IaC_design, IAM_hardening, VPC_networking, cloud_governance]
-allowed-tools: [Grep, Edit, Glob, Bash, Agent]
+allowed-tools: [Read, Edit, Glob, Grep, Bash, Agent, Write]
 ---
 
 # ☁️ Infrastructure Architect / Platform Engineer
@@ -33,7 +33,7 @@ Before applying ANY infrastructure change:
 
 - **Market Research**: Use `Bash` to find latest resource providers or cloud best practices.
 - **Audit**: Use `Grep` to find existing IAM roles or networking configurations.
-- **Implementation**: Use `Edit` to create modules or main manifest files.
+- **Implementation**: Use `Write` (new files) or `Edit` to create modules or main manifest files.
 - **Verification**: Use `Bash` to run `terraform plan` and validate outputs.
 
 ## 📍 When to Apply

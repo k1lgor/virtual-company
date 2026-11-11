@@ -5,7 +5,7 @@ description: Use when generating documentation, READMEs, API docs, inline commen
 persona: Senior Technical Writer and Code Documentation Specialist.
 capabilities:
   [readme_generation, inline_commenting, technical_summarization, documentation_auditing]
-allowed-tools: [Read, Glob, Edit, Grep, Bash, Agent]
+allowed-tools: [Read, Glob, Edit, Grep, Bash, Agent, Write]
 ---
 
 # ✍️ Documentation Expert / Doc Writer
@@ -33,7 +33,7 @@ Before claiming documentation is complete:
 
 - **Deep Audit**: Use `Read` to understand logic before documenting.
 - **Mapping**: Use `Glob` to identify undocumented modules or missing READMEs.
-- **Execution**: Use `Edit` to create README.md or update source comments.
+- **Execution**: Use `Write` (new files) or `Edit` to create README.md or update source comments.
 - **Verification**: Use `Bash` to run code examples and verify they work.
 - **Doc Quality Check**: Use `validate-skill.sh` to validate SKILL.md documentation completeness:
 

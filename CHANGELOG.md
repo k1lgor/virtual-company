@@ -5,6 +5,50 @@ All notable changes to the Virtual Company plugin will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] — 2026-11-11
+
+Workflow-audit release: the security scanner could not detect anything, skills instructed
+tools they did not have, and one skill named a tool that exists in no supported harness.
+
+### Fixed
+
+- **`security-sentinel.sh` detected zero secrets — ever.** Its patterns were written with BRE
+  quantifier syntax (`\{48\}`, `\+`) but invoked with `grep -nE` (ERE), where `\{` is a literal
+  brace, so every quantified pattern silently matched nothing. The secret-scan HARD-GATE it
+  backs was therefore decorative: leaked OpenAI keys, GitHub tokens, AWS keys, private keys and
+  the rest all passed. All 18 patterns are now valid ERE and verified against real-format
+  samples (OpenAI/GitHub/AWS keys, RSA key headers, JWTs, Google keys, generic passwords).
+  Also added `--` before the pattern in `grep -nE`: the Private-Key rule starts with
+  `-----BEGIN`, which grep otherwise parsed as command-line options — that check silently
+  matched nothing even after the quantifier fix.
+- **22 skills instructed creating new files with `Edit`, which cannot create files.** None of
+  the 27 skills granted `Write`, so “Use `Edit` to create README.md / test files / Dockerfiles /
+  PRDs / SKILL.md” failed the first time the target file did not exist. `Write` is now granted
+  in the 22 affected skills, and their Tool Guidance reads “Use `Write` (new files) or `Edit`”.
+- **`00-tech-lead` named a nonexistent tool.** Its Sub-Agent Swarming section said “use
+  `sessions_spawn` for parallel agents” — no supported harness has that tool. It now says to
+  dispatch parallel agents per the Agent Dispatch Protocol below the section.
+- **`08-ci-config-helper` instructed `Glob` without granting it** (environment discovery for
+  workflow files). **`09-infra-architect` granted `Edit` without `Read`**, which makes its own
+  Edit-Integrity guardrail (“re-read the file before and after every edit”) impossible. Both
+  grants are fixed.
+- **The Proactive Routing table had duplicate keywords across rows** — `embedding` in both
+  `ml-engineer` and `search-vector-architect`, `pipeline` in both `data-engineer` and
+  `ci-config-helper`, `workflow` in both `ci-config-helper` and `workflow-orchestrator` —
+  and no row routed to the `tech-lead` skill, leaving it unreachable from intent routing.
+  Duplicates were made row-specific (`data pipeline`, `CI pipeline`) and an
+  `implement this feature` row was added for `tech-lead`. Inflection traps (`PR` ⊂ “PRD”,
+  `compose` ⊂ “decompose”) remain: the table's documented policy delegates those to the
+  model (“pick the best match”).
+
+### Changed
+
+- **The PostToolUse lint hook no longer re-runs a failing lint across four package managers.**
+  The old `npm || bun || yarn || pnpm` chain re-executed the same failing lint command up to
+  four times per edit on repos with several runners installed. The hook now selects one runner
+  from the lockfile (`bun.lockb`/`bun.lock`, `yarn.lock`, `pnpm-lock.yaml`, else npm) and falls
+  back to a status echo on failure. Hook still always exits 0.
+
 ## [1.6.0] — 2026-10-20
 
 Audit release: the quality gates, the learning log, and the preamble-tier system were all

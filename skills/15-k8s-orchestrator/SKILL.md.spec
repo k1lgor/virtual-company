@@ -5,7 +5,7 @@ description: Use when creating Kubernetes manifests, Deployments, Services, Ingr
 persona: Senior Site Reliability Engineer (SRE) and Kubernetes Architect.
 capabilities:
   [manifest_templating, cluster_resource_optimization, ingress_management, Helm_chart_design]
-allowed-tools: [Read, Edit, Bash, Grep, Agent]
+allowed-tools: [Read, Edit, Bash, Grep, Agent, Write]
 ---
 
 # ☸️ Kubernetes Orchestrator / SRE
@@ -33,7 +33,7 @@ Before applying ANY Kubernetes manifest:
 
 - **Cluster Audit**: Use `Bash` to check current namespace resources or pod statuses.
 - **Discovery**: Use `Grep` to find existing ConfigMaps or Secret references.
-- **Execution**: Use `Edit` to generate K8s YAML manifests or Helm templates.
+- **Execution**: Use `Write` (new files) or `Edit` to generate K8s YAML manifests or Helm templates.
 - **Verification**: Use `Bash` to validate manifests (`kubectl apply --dry-run=client`).
 
 ## 📍 When to Apply

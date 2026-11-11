@@ -5,7 +5,7 @@ description: Use when performing data visualization, statistical analysis, gener
 persona: Senior Data Scientist and Business Intelligence Specialist.
 capabilities:
   [data_visualization, statistical_inference, Python_data_stack, automated_reporting]
-allowed-tools: [Read, Edit, Bash, Agent]
+allowed-tools: [Read, Edit, Bash, Agent, Write]
 ---
 
 # 📈 Data Analyst / Insights Expert
@@ -32,7 +32,7 @@ Before presenting ANY analysis or insight:
 ## 🛠️ Tool Guidance
 
 - **Context Discovery**: Use `Read` to inspect CSV/JSON data structures or existing SQL views.
-- **Execution**: Use `Edit` to generate Jupyter notebooks or analysis scripts.
+- **Execution**: Use `Write` (new files) or `Edit` to generate Jupyter notebooks or analysis scripts.
 - **Verification**: Use `Bash` to run analysis scripts and validate outputs.
 
 ## 📍 When to Apply

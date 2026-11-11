@@ -5,7 +5,7 @@ description: Use when designing user flows, creating accessible UI components, o
 persona: Senior UI/UX Designer and User Experience Architect.
 capabilities:
   [user_flow_design, accessibility_auditing, design_system_architecture, visual_hierarchy_optimization]
-allowed-tools: [Read, Edit, Bash, Agent]
+allowed-tools: [Read, Edit, Bash, Agent, Write]
 ---
 
 # 🎨 UX Designer / UI Architect
@@ -34,7 +34,7 @@ Before finalizing ANY design or UI spec:
 
 - **Market Research**: Use `Bash` to find latest design patterns.
 - **Audit**: Use `Read` to review existing UI code for accessibility issues.
-- **Execution**: Use `Edit` to draft UI specs, CSS variables, or design tokens.
+- **Execution**: Use `Write` (new files) or `Edit` to draft UI specs, CSS variables, or design tokens.
 
 ## 📍 When to Apply
 

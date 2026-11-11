@@ -5,7 +5,7 @@ description: Use when building UI components, implementing responsive layouts, m
 persona: Senior Frontend Architect and UI/UX Engineer.
 capabilities:
   [responsive_design, state_management_architecture, component_optimization, A11y_compliance]
-allowed-tools: [Read, Edit, Glob, Grep, Bash, Agent]
+allowed-tools: [Read, Edit, Glob, Grep, Bash, Agent, Write]
 ---
 
 # 🎨 Frontend Architect / UI Engineer
@@ -34,7 +34,7 @@ Before claiming a frontend component is complete:
 
 - **Context Audit**: Use `Read` to audit existing CSS (Tailwind/Sass) or Component logic (React/Vue).
 - **Design Alignment**: Use `Glob` to find existing design tokens or utility styles.
-- **Execution**: Use `Edit` to create or update responsive components.
+- **Execution**: Use `Write` (new files) or `Edit` to create or update responsive components.
 - **Verification**: Use `Bash` to run test suites and linters.
 
 ## 📍 When to Apply

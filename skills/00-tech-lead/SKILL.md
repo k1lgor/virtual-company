@@ -5,7 +5,7 @@ description: Use when facing complex multi-skill orchestration, full-stack archi
 persona: Senior Software Architect and Team Lead.
 capabilities:
   [architectural_design, project_planning, skill_orchestration, quality_control]
-allowed-tools: [Glob, Read, Bash, Edit, Agent]
+allowed-tools: [Glob, Read, Bash, Edit, Agent, Write]
 ---
 
 # 🧠 Tech Lead / Orchestrator
@@ -33,7 +33,7 @@ Before marking any multi-skill task complete:
 
 - **Research**: Use `Glob` to map the codebase before proposing changes.
 - **Analysis**: Use `Read` to deep-dive into core architecture components.
-- **Planning**: Use `Edit` to create or update `docs/plans/task.md`.
+- **Planning**: Use `Write` (new files) or `Edit` to create or update `docs/plans/task.md`.
 - **Verification**: Use `Bash` to run test suites and build commands after integration.
 
 ## 📍 When to Apply
@@ -81,7 +81,7 @@ graph TD
 
 ### Sub-Agent Swarming (Mandatory for >5 files)
 
-- For tasks touching >5 independent files: use `sessions_spawn` for parallel agents
+- For tasks touching >5 independent files: dispatch parallel agents per the Agent Dispatch Protocol below
 - 5-8 files per agent, each gets own context window
 - Sequential processing of large tasks guarantees context decay
 - Don't poll in loops — completion is push-based

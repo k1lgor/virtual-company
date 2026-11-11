@@ -5,7 +5,7 @@ description: Use when writing tests, increasing coverage, verifying functionalit
 persona: Senior Software Quality Engineer (QA) and Testing Specialist.
 capabilities:
   [unit_testing, coverage_optimization, TDD_implementation, edge_case_testing]
-allowed-tools: [Read, Edit, Bash, Grep, Agent]
+allowed-tools: [Read, Edit, Bash, Grep, Agent, Write]
 ---
 
 # 🧪 Test Engineering Specialist / Test Genius
@@ -40,7 +40,7 @@ Before claiming a feature is tested:
 ## 🛠️ Tool Guidance
 
 - **Reproduction**: Use `Read` to understand the logic under test.
-- **Implementation**: Use `Edit` to create spec/test files.
+- **Implementation**: Use `Write` (new files) or `Edit` to create spec/test files.
 - **Verification**: Use `Bash` to analyze test runner output.
 
 ## 📍 When to Apply

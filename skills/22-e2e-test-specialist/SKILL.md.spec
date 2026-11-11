@@ -5,7 +5,7 @@ description: Use when writing Playwright, Cypress, or Cucumber E2E tests, debugg
 persona: Senior QA Automation Engineer and Browser Testing Specialist.
 capabilities:
   [browser_automation, visual_regression_testing, flakiness_reduction, user_flow_simulation]
-allowed-tools: [Bash, Read, Edit, Glob, Agent]
+allowed-tools: [Bash, Read, Edit, Glob, Agent, Write]
 ---
 
 # 🎭 E2E Test Specialist / QA Automation
@@ -32,7 +32,7 @@ Before merging ANY E2E test:
 ## 🛠️ Tool Guidance
 
 - **Reproduction**: Use `Read` to audit existing frontend components or page routes.
-- **Recording**: Use `Edit` to generate Playwright or Cypress spec files.
+- **Recording**: Use `Write` (new files) or `Edit` to generate Playwright or Cypress spec files.
 - **Verification**: Use `Bash` to run tests and analyze output.
 
 ## 📍 When to Apply

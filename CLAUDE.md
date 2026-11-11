@@ -280,7 +280,7 @@ When the user's intent matches a pattern below, auto-route to the correct expert
 |---|---|---|
 | "bug", "broken", "error", "crash", "wtf", "not working", "stack trace" | `bug-hunter` | Quality |
 | "test", "coverage", "TDD", "unit test", "test suite" | `test-genius` | Quality |
-| "security", "vulnerability", "auth check", "OWASP", "exploit" | `security-reviewer` | Quality |
+| "security", "vulnerability", "vulnerabilities", "auth check", "OWASP", "exploit" | `security-reviewer` | Quality |
 | "E2E", "end-to-end", "integration test", "Playwright", "Cypress" | `e2e-test-specialist` | Quality |
 | "deploy", "ship", "PR", "merge", "land this", "send it" | `qa-engineer` + `code-reviewer` | Quality |
 | "refactor", "clean up", "code smell", "DRY", "SOLID", "dead code" | `code-polisher` | Maintenance |
@@ -288,15 +288,15 @@ When the user's intent matches a pattern below, auto-route to the correct expert
 | "migrate", "upgrade", "version bump", "dependency update" | `migration-upgrader` | Maintenance |
 | "API", "endpoint", "contract", "REST", "GraphQL", "OpenAPI", "schema" | `api-designer` | Logic |
 | "backend", "server", "middleware", "controller", "service layer" | `backend-architect` | Logic |
-| "database", "query", "SQL", "pipeline", "ETL", "data model" | `data-engineer` | Logic |
-| "ML", "model", "training", "RAG", "embedding", "LLM pipeline" | `ml-engineer` | Logic |
+| "database", "query", "SQL", "data pipeline", "ETL", "data model" | `data-engineer` | Logic |
+| "ML", "model", "training", "RAG", "LLM pipeline" | `ml-engineer` | Logic |
 | "UI", "component", "React", "Vue", "CSS", "layout", "responsive" | `frontend-architect` | Frontend |
 | "design", "UX", "user flow", "mockup", "wireframe", "accessibility" | `ux-designer` | Frontend |
 | "mobile", "iOS", "Android", "React Native", "Flutter" | `mobile-architect` | Frontend |
 | "Docker", "container", "image", "dockerfile", "compose" | `docker-expert` | Infrastructure |
 | "K8s", "Kubernetes", "deployment", "pod", "helm", "ingress" | `k8s-orchestrator` | Infrastructure |
 | "infra", "AWS", "cloud", "Terraform", "VPC", "networking" | `infra-architect` | Infrastructure |
-| "CI", "CD", "pipeline", "GitHub Actions", "Jenkins", "workflow" | `ci-config-helper` | Infrastructure |
+| "CI", "CD", "CI pipeline", "GitHub Actions", "Jenkins" | `ci-config-helper` | Infrastructure |
 | "performance", "slow", "optimize", "bottleneck", "profile", "latency" | `performance-profiler` | Infrastructure |
 | "monitoring", "logging", "observability", "alerts", "Prometheus", "Grafana" | `observability-specialist` | Infrastructure |
 | "search", "vector", "embedding", "semantic search", "RAG retrieval" | `search-vector-architect` | Analysis |
@@ -307,6 +307,7 @@ When the user's intent matches a pattern below, auto-route to the correct expert
 | "product", "feature request", "user story", "PRD", "requirements" | `product-manager` | Orchestration |
 | "workflow", "orchestrate", "pipeline coordination", "multi-step" | `workflow-orchestrator` | Orchestration |
 | "create a skill", "new expert", "skill template", "generate skill" | `skill-generator` | Orchestration |
+| "implement this feature", "build it end to end", "coordinate the build" | `tech-lead` | Orchestration |
 
 **Route first, ask questions later.** If intent is ambiguous between 2+ skills, pick the best match and proceed. If it's wrong, the user will correct you — that's faster than asking up front.
 

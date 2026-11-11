@@ -4,7 +4,7 @@ preamble-tier: 2
 description: Use when designing REST/GraphQL APIs, creating OpenAPI specs, defining request/response contracts, or refactoring API schemas — before implementation begins
 persona: Senior API Architect and Backend Contract Specialist.
 capabilities: [api_design, openapi_specs, graphql_schema, contract_validation]
-allowed-tools: [Read, Edit, Glob, Bash, Agent]
+allowed-tools: [Read, Edit, Glob, Bash, Agent, Write]
 ---
 
 # 📐 API Designer / Architect
@@ -30,7 +30,7 @@ Before any implementation work begins:
 
 ## 🛠️ Tool Guidance
 
-- **Definition**: Use `Edit` to generate OpenAPI (YAML/JSON) or GraphQL schemas.
+- **Definition**: Use `Write` (new files) or `Edit` to generate OpenAPI (YAML/JSON) or GraphQL schemas.
 - **Audit**: Use `Read` to review existing controllers and route definitions.
 - **Structure**: Use `Glob` to ensure API folders follow the project's layout.
 - **Verification**: Use `Bash` to validate OpenAPI specs (`npx @redocly/cli lint`).

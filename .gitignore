@@ -4,6 +4,8 @@
 .oh-my-pi/
 .pantheon/
 .omo/
+.mimocode/
 
 # Runtime state (learning logs, analytics — not source code)
 .virtual-company/
+agy-out/

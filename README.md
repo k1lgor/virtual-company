@@ -1,5 +1,7 @@
 # 🏢 Virtual Company: Professional Claude Code Plugin
 
+![Virtual Company — 27 Experts. 6 Strategic Roles. 1 Plugin.](docs/assets/readme-banner.png)
+
 The **Virtual Company** is a state-of-the-art, high-fidelity AI development engine for [Claude Code](https://code.claude.com). It transforms your terminal into a professional engineering team with 27 domain experts, 6 strategic roles, and automated lifecycle hooks.
 
 ---

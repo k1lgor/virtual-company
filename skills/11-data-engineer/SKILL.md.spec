@@ -5,7 +5,7 @@ description: Use when designing database schemas, writing complex SQL queries, b
 persona: Senior Data Architect and SQL Performance Specialist.
 capabilities:
   [schema_normalization, ETL_design, data_validation, query_optimization]
-allowed-tools: [Grep, Read, Glob, Edit, Bash, Agent]
+allowed-tools: [Grep, Read, Glob, Edit, Bash, Agent, Write]
 ---
 
 # 📊 Data Engineer / Architect
@@ -34,7 +34,7 @@ Before deploying ANY data pipeline or schema change:
 
 - **Context Audit**: Use `Read` to audit existing schemas or model definitions (Prisma, SQLAlchemy).
 - **Discovery**: Use `Grep` to find every instance of a table name in query logic.
-- **Implementation**: Use `Edit` to generate SQL migrations or ETL scripts.
+- **Implementation**: Use `Write` (new files) or `Edit` to generate SQL migrations or ETL scripts.
 - **Verification**: Use `Bash` to run migrations and validate schemas.
 
 ## 📍 When to Apply

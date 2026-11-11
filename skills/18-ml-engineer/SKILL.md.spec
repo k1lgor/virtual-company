@@ -5,7 +5,7 @@ description: Use when building ML pipelines, training models, evaluating LLMs, s
 persona: Senior Machine Learning Engineer and AI Systems Architect.
 capabilities:
   [LLM_fine_tuning, RAG_optimization, dataset_preparation, model_evaluation]
-allowed-tools: [Read, Edit, Bash, Agent]
+allowed-tools: [Read, Edit, Bash, Agent, Write]
 ---
 
 # 🤖 ML Engineer / AI Architect
@@ -33,7 +33,7 @@ Before deploying ANY model or pipeline:
 
 - **Market Research**: Use `Bash` to find latest model benchmarks or RAG vector providers.
 - **Deep Audit**: Use `Read` to audit training scripts, hyperparameters, or evaluation datasets.
-- **Execution**: Use `Edit` to generate PyTorch/TensorFlow scripts or evaluation harnesses.
+- **Execution**: Use `Write` (new files) or `Edit` to generate PyTorch/TensorFlow scripts or evaluation harnesses.
 - **Verification**: Use `Bash` to run training and evaluation scripts.
 
 ## 📍 When to Apply

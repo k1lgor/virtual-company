@@ -68,25 +68,28 @@ done
 
 # --- Pattern definitions ---
 # Each pattern: "name|severity|regex"
+# Regexes are POSIX ERE: scan_file() runs `grep -nE`. BRE quantifiers
+# (`\{48\}`, `\+`) do NOT work under -E — GNU grep treats `\{` as a literal
+# brace, so every quantified pattern silently matched nothing (v1.6.0 bug).
 PATTERNS=(
-    "Google API Key|CRITICAL|AIza[0-9A-Za-z_-]\{35\}"
-    "OpenAI API Key|CRITICAL|sk-[a-zA-Z0-9]\{48\}"
-    "GitHub Token (ghp)|CRITICAL|ghp_[a-zA-Z0-9]\{36\}"
-    "GitHub Token (gho)|CRITICAL|gho_[a-zA-Z0-9]\{36\}"
-    "GitHub Token (ghu)|CRITICAL|ghu_[a-zA-Z0-9]\{36\}"
-    "GitHub Token (ghs)|CRITICAL|ghs_[a-zA-Z0-9]\{36\}"
-    "GitHub Token (ghr)|CRITICAL|ghr_[a-zA-Z0-9]\{36\}"
-    "AWS Access Key|CRITICAL|AKIA[0-9A-Z]\{16\}"
-    "Private Key|CRITICAL|-----BEGIN \(RSA \|EC \|DSA \)\{0,1\}PRIVATE KEY-----"
-    "Stripe Live Key (sk)|CRITICAL|sk_live_[0-9a-zA-Z]\{24,\}"
-    "Stripe Live Key (rk)|CRITICAL|rk_live_[0-9a-zA-Z]\{24,\}"
-    "npm Token|HIGH|npm_[A-Za-z0-9]\{36\}"
-    "Slack Token|HIGH|xox[bpqoras]-[0-9a-zA-Z-]\+"
-    "Twilio API Key|HIGH|SK[0-9a-fA-F]\{32\}"
-    "SendGRID API Key|HIGH|SG\.[a-zA-Z0-9_-]\{22\}\.[a-zA-Z0-9_-]\{43\}"
-    "JWT Token|HIGH|eyJ[a-zA-Z0-9_-]\+\.eyJ[a-zA-Z0-9_-]\+\.[a-zA-Z0-9_-]\+"
-    "Generic Password|MEDIUM|password[[:space:]]*=[[:space:]]*[\"'][^\"']\+[\"']"
-    "Heroku API Key|MEDIUM|[0-9a-fA-F]\{8\}-[0-9a-fA-F]\{4\}-[0-9a-fA-F]\{4\}-[0-9a-fA-F]\{4\}-[0-9a-fA-F]\{12\}"
+    "Google API Key|CRITICAL|AIza[0-9A-Za-z_-]{35}"
+    "OpenAI API Key|CRITICAL|sk-[a-zA-Z0-9]{48}"
+    "GitHub Token (ghp)|CRITICAL|ghp_[a-zA-Z0-9]{36}"
+    "GitHub Token (gho)|CRITICAL|gho_[a-zA-Z0-9]{36}"
+    "GitHub Token (ghu)|CRITICAL|ghu_[a-zA-Z0-9]{36}"
+    "GitHub Token (ghs)|CRITICAL|ghs_[a-zA-Z0-9]{36}"
+    "GitHub Token (ghr)|CRITICAL|ghr_[a-zA-Z0-9]{36}"
+    "AWS Access Key|CRITICAL|AKIA[0-9A-Z]{16}"
+    "Private Key|CRITICAL|-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----"
+    "Stripe Live Key (sk)|CRITICAL|sk_live_[0-9a-zA-Z]{24,}"
+    "Stripe Live Key (rk)|CRITICAL|rk_live_[0-9a-zA-Z]{24,}"
+    "npm Token|HIGH|npm_[A-Za-z0-9]{36}"
+    "Slack Token|HIGH|xox[bpqoras]-[0-9a-zA-Z-]+"
+    "Twilio API Key|HIGH|SK[0-9a-fA-F]{32}"
+    "SendGRID API Key|HIGH|SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}"
+    "JWT Token|HIGH|eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+"
+    "Generic Password|MEDIUM|password[[:space:]]*=[[:space:]]*[\"'][^\"']+[\"']"
+    "Heroku API Key|MEDIUM|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 )
 
 # --- Load custom patterns ---
@@ -131,9 +134,11 @@ scan_file() {
             continue
         fi
 
-        # Use grep with the regex pattern
+        # Use grep with the regex pattern. `--` is required: a pattern starting
+        # with `-` (the Private Key rule begins `-----BEGIN …`) is otherwise
+        # parsed as grep options and the check silently matches nothing.
         local matches
-        matches=$(grep -nE "$regex" "$file" 2>/dev/null || true)
+        matches=$(grep -nE -- "$regex" "$file" 2>/dev/null || true)
 
         if [[ -n "$matches" ]]; then
             FOUND_SECRETS=1

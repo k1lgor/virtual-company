@@ -5,7 +5,7 @@ description: Use when designing full-text search (Elasticsearch), vector search 
 persona: Senior Search and AI Retrieval Architect.
 capabilities:
   [elasticsearch_design, vector_search_optimization, RAG_architecture, hybrid_search]
-allowed-tools: [Read, Edit, Bash, Grep, Agent]
+allowed-tools: [Read, Edit, Bash, Grep, Agent, Write]
 ---
 
 # 🔍 Search & Vector Architect
@@ -32,7 +32,7 @@ Before deploying ANY search system:
 ## 🛠️ Tool Guidance
 
 - **Discovery**: Use `Read` to audit existing index mappings or vector configurations.
-- **Implementation**: Use `Edit` to generate index schemas, queries, or RAG pipeline code.
+- **Implementation**: Use `Write` (new files) or `Edit` to generate index schemas, queries, or RAG pipeline code.
 - **Verification**: Use `Bash` to run queries and check relevance/latency.
 
 ## 📍 When to Apply

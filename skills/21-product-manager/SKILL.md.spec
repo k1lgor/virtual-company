@@ -5,7 +5,7 @@ description: Use when breaking down epics into user stories, prioritizing featur
 persona: Senior Product Manager and Requirements Analyst.
 capabilities:
   [user_story_mapping, prioritization_frameworks, backlog_grooming, MVP_scoping]
-allowed-tools: [Read, Edit, Glob, Bash, Agent]
+allowed-tools: [Read, Edit, Glob, Bash, Agent, Write]
 ---
 
 # 📋 Product Manager / Strategist
@@ -32,7 +32,7 @@ Before a story enters the sprint/backlog:
 ## 🛠️ Tool Guidance
 
 - **Deep Audit**: Use `Read` to audit existing business logic or READMEs for product context.
-- **Planning**: Use `Edit` to generate PRDs, User Stories, or task roadmaps.
+- **Planning**: Use `Write` (new files) or `Edit` to generate PRDs, User Stories, or task roadmaps.
 - **Market Research**: Use `Bash` to find industry benchmarks or feature comparisons.
 
 ## 📍 When to Apply
